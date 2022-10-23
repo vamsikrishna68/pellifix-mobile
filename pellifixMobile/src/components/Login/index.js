@@ -6,7 +6,7 @@ import * as yup from 'yup'
 import { login } from '../../services/api'
 import { useNavigate } from "react-router-native";
 import Toast from 'react-native-toast-message';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
     let navigate = useNavigate();
@@ -80,10 +80,27 @@ const Login = () => {
                         initialValues={{ email: '', password: '' }}
                         onSubmit={values => {
                             console.log(values, "va;ue")
-                            login(values.email, values.password).then(res => {
-                                console.log(res)
-                            },err=>{
-                                console.log(err,"err")
+                            login(values.email, values.password).then(async res => {
+
+                                if (res.data) {
+                                    let userData = JSON.stringify(res.data)
+                                    await AsyncStorage.setItem('@storage_Key', userData)
+                                    Toast.show({
+                                        type: 'success',
+                                        position: 'bottom',
+                                        bottomOffset: 170,
+                                        text1: 'Authentication Successfull!',
+                                    });
+                                    navigate('/home')
+                                }
+                            }, err => {
+                                console.log(err, "err")
+                                Toast.show({
+                                    type: 'error',
+                                    position: 'bottom',
+                                    bottomOffset: 170,
+                                    text1: 'UserId or Password is wrong!',
+                                });
                             })
 
                         }}
@@ -129,7 +146,7 @@ const Login = () => {
                                 Login
                             </Button>
                             <View style={styles.CardTitles}>
-                                <Text>Don't have Account? <Text style={styles.Underline}>Register</Text></Text>
+                                <Text>Don't have Account? <Text  onPress={()=> navigate('/register')}  style={styles.Underline}>Register</Text></Text>
                             </View>
 
                         </>
