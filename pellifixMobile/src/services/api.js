@@ -12,5 +12,9 @@ export const login = (email, password) => {
 
 
 export const register = (payload) => {
-    return axios.post("/customer/register",payload);
+    return axios.post("/customer/register", payload);
+}
+
+export const submitOtp = (payload) => {
+    return axios.post("/customer/otp/verify", payload);
 }
