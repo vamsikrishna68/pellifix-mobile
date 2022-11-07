@@ -91,7 +91,7 @@ const Login = () => {
                                         bottomOffset: 170,
                                         text1: 'Authentication Successfull!',
                                     });
-                                    navigate('/home')
+                                    navigate('/auth/home')
                                 }
                             }, err => {
                                 console.log(err, "err")
