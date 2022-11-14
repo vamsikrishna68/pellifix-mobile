@@ -15,6 +15,7 @@ import {Drawer} from 'react-native-material-drawer';
 import {Outlet, useNavigate} from 'react-router-native';
 
 const Layout = () => {
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [visible, setVisible] = React.useState(false);
   const windowHeight = Dimensions.get('window').height;
@@ -65,7 +66,8 @@ const Layout = () => {
           {/* <Menu.Item onPress={() => { }} title="Profile" /> */}
           <Menu.Item
             onPress={() => {
-              navigate('/auth/view-profile');
+              closeMenu()
+              navigate('/auth/profile');
             }}
             title="Profile"
           />

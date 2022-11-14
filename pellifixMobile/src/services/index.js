@@ -1,5 +1,5 @@
 import axios from "axios";
-// // import { getToken } from "../utils/user";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 axios.defaults.baseURL = 'https://api.pellifix.com/v1'
 
@@ -13,24 +13,26 @@ axios.interceptors.response.use(
   }
 );
 
-// export async function apiService({
-//   url = "",
-//   method = "GET",
-//   body = null,
-//   headers = {},
-// }) {
-//   const authToken = await getToken()
-//   const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
-//   if (!headers["Content-Type"]) {
-//     headers["Content-Type"] = "application/json";
-//   }
-//   if (authToken) {
-//     headers["x-access-token"] = `${authToken}`;
-//   }
-//   return axios.request({
-//     url,
-//     method,
-//     headers,
-//     [dataOrParams]: body,
-//   });
-// }
+
+
+export async function apiService({
+  url = "",
+  method = "GET",
+  body = null,
+  headers = {},
+}) {
+  const authToken = await AsyncStorage.getItem('@storage_Key')
+  const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
+  if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (authToken) {
+    headers["x-access-token"] = `${authToken}`;
+  }
+  return axios.request({
+    url,
+    method,
+    headers,
+    [dataOrParams]: body,
+  });
+}

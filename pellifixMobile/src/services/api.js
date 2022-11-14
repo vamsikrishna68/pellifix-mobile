@@ -1,20 +1,26 @@
+import axios from 'axios';
+import {apiService} from '.';
 
-import axios from "axios";
-
-axios.defaults.baseURL = 'https://api.pellifix.com/v1'
+axios.defaults.baseURL = 'https://api.pellifix.com/v1';
 
 export const login = (email, password) => {
-    return axios.post("/customer/login", {
-        "email_id": email,
-        "password": password,
-    });
-}
+  return axios.post('/customer/login', {
+    email_id: email,
+    password: password,
+  });
+};
 
+export const register = payload => {
+  return axios.post('/customer/register', payload);
+};
 
-export const register = (payload) => {
-    return axios.post("/customer/register", payload);
-}
+export const submitOtp = payload => {
+  return axios.post('/customer/otp/verify', payload);
+};
 
-export const submitOtp = (payload) => {
-    return axios.post("/customer/otp/verify", payload);
-}
+export const getDropdownValues = () => {
+  return apiService({
+    url: '/reference/drop-down',
+    method: 'GET',
+  });
+};
