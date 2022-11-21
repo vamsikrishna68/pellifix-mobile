@@ -25,7 +25,7 @@ const MenuList = ({close}) => {
     },
     {
       title: 'Edit Profile',
-      route: 'edit-profile',
+      route: '/auth/profile',
       icon: 'account-edit',
     },
     {
