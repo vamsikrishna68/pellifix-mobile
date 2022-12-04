@@ -141,7 +141,7 @@ const Login = () => {
                             {errors.password && touched.password &&
                                 <Text style={styles.Error}>{errors.password}</Text>
                             }
-                            <Paragraph>Forgot Password?</Paragraph>
+                            <Paragraph onPress={()=>navigate('/forgot-password')}>Forgot Password?</Paragraph>
                             <Button style={styles.Submit} mode="contained" onPress={handleSubmit}>
                                 Login
                             </Button>

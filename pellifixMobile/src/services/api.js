@@ -14,6 +14,10 @@ export const register = payload => {
   return axios.post('/customer/register', payload);
 };
 
+export const forgotPasswordRequest = payload => {
+  return axios.post('/customer/password/reset', payload);
+};
+
 export const submitOtp = payload => {
   return axios.post('/customer/otp/verify', payload);
 };
