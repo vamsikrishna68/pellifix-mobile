@@ -6,6 +6,7 @@ import Register from '../components/Register';
 import ForgotPassword from '../components/ForgotPassword'
 import Layout from '../components/Layout';
 import Profile from '../components/Profile';
+import EditPreference from '../components/EditPreference';
 
 const AppRoutes = () => (
   <NativeRouter>
@@ -16,6 +17,7 @@ const AppRoutes = () => (
       <Route exact path="/auth" element={<Layout />}>
         <Route exact path="home" element={<Home />} />
         <Route exact path="profile" element={<Profile />} />
+        <Route exact path="edit-preference" element={<EditPreference />} />
       </Route>
     </Routes>
   </NativeRouter>

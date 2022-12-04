@@ -28,3 +28,17 @@ export const getDropdownValues = () => {
     method: 'GET',
   });
 };
+
+export const getEditPreference = () => {
+  return apiService({
+    url: '/profile/preferences',
+    method: 'GET',
+  });
+};
+
+export const patchEditPreference = () => {
+  return apiService({
+    url: '/profile/preferences',
+    method: 'PATCH',
+  });
+};
