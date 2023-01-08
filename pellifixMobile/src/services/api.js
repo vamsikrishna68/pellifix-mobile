@@ -42,3 +42,10 @@ export const patchEditPreference = () => {
     method: 'PATCH',
   });
 };
+
+export const getProfiles =(type)=>{
+  return apiService({
+    url: `/matches/${type}`,
+    method:'GET'
+  })
+}

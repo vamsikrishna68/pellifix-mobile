@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 axios.defaults.baseURL = 'https://api.pellifix.com/v1'
 
 axios.interceptors.response.use(
@@ -27,7 +28,8 @@ export async function apiService({
     headers["Content-Type"] = "application/json";
   }
   if (authToken) {
-    headers["x-access-token"] = `${authToken}`;
+    console.log(JSON.parse(authToken).token,"token")
+    headers["Authorization"] = `Bearer ${JSON.parse(authToken).token}`;
   }
   return axios.request({
     url,
@@ -36,3 +38,7 @@ export async function apiService({
     [dataOrParams]: body,
   });
 }
+
+
+
+
