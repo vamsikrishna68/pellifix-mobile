@@ -49,3 +49,18 @@ export const getProfiles =(type)=>{
     method:'GET'
   })
 }
+
+export const fetchProfileData =()=>{
+  return apiService({
+    url: `/profiles`,
+    method:'GET'
+  })
+}
+
+export const updateProfileData =(payload)=>{
+  return apiService({
+    url: `/profiles`,
+    method:'PATCH',
+    body: payload,
+  })
+}

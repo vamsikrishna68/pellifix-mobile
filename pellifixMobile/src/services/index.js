@@ -9,7 +9,6 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log(error, "error response")
     return error;
   }
 );
@@ -28,7 +27,6 @@ export async function apiService({
     headers["Content-Type"] = "application/json";
   }
   if (authToken) {
-    console.log(JSON.parse(authToken).token,"token")
     headers["Authorization"] = `Bearer ${JSON.parse(authToken).token}`;
   }
   return axios.request({

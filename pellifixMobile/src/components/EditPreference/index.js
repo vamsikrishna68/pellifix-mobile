@@ -56,7 +56,7 @@ const EditPreference = () => {
   const fetchEditPreference = async () => {
     const response = await getEditPreference().catch(console.log);
     if (response) {
-      console.log(response);
+      console.log(response,"res");
     }
   };
 
