@@ -40,7 +40,7 @@ const MenuList = ({close}) => {
     },
     {
       title: 'Profile Viewed',
-      route: 'profile-viewed',
+      route: 'view-profile',
       icon: 'account-edit',
     },
   ];
