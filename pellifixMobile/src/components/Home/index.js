@@ -96,7 +96,7 @@ const Home = () => {
     getDailyProfiles();
     getHoroscopicProfiles();
     getPreferenceProfiles();
-  });
+  },[]);
 
   const getDailyProfiles = async () => {
     const response = await getProfiles('daily');

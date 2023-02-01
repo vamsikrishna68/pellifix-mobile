@@ -7,6 +7,7 @@ import ForgotPassword from '../components/ForgotPassword'
 import Layout from '../components/Layout';
 import Profile from '../components/Profile';
 import EditPreference from '../components/EditPreference';
+import Subscription from '../components/Subscription';
 
 const AppRoutes = () => (
   <NativeRouter>
@@ -18,6 +19,7 @@ const AppRoutes = () => (
         <Route exact path="home" element={<Home />} />
         <Route exact path="profile" element={<Profile />} />
         <Route exact path="edit-preference" element={<EditPreference />} />
+        <Route exact path="subscription" element={<Subscription />} />
       </Route>
     </Routes>
   </NativeRouter>

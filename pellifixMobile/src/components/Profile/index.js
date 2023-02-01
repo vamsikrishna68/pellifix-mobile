@@ -204,7 +204,7 @@ const Profile = () => {
                   value={values.name}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('name')}
                   onChangeText={handleChange('name')}
                   label="Name"
@@ -214,7 +214,7 @@ const Profile = () => {
                   value={values.surname}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('surname')}
                   onChangeText={handleChange('surname')}
                   label="Surname"
@@ -237,7 +237,7 @@ const Profile = () => {
                   value={values.dob}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('dob')}
                   onChangeText={showTimepicker}
                   label="Date of Birth"
@@ -271,7 +271,7 @@ const Profile = () => {
                   value={values.height}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('height')}
                   onChangeText={handleChange('height')}
                   label="Height"
@@ -281,7 +281,7 @@ const Profile = () => {
                   value={values.weight}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('weight')}
                   onChangeText={handleChange('weight')}
                   label="Weight"
@@ -387,7 +387,7 @@ const Profile = () => {
                   value={values.email}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('time_of_birth')}
                   onChangeText={showTimepicker}
                   label="Time of Birth"
@@ -446,7 +446,7 @@ const Profile = () => {
                   value={values.city}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('city')}
                   onChangeText={handleChange('city')}
                   label="Select Town/City"
@@ -468,7 +468,7 @@ const Profile = () => {
                   value={values.employeed_in}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('employeed_in')}
                   onChangeText={handleChange('employeed_in')}
                   label="Employed In"
@@ -527,7 +527,7 @@ const Profile = () => {
                   value={values.fathers_occupation}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('fathers_occupation')}
                   onChangeText={handleChange('fathers_occupation')}
                   label="Father's Occupation"
@@ -537,7 +537,7 @@ const Profile = () => {
                   value={values.mothers_occupation}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('mothers_occupation')}
                   onChangeText={handleChange('mothers_occupation')}
                   label="Mother's Occupation"
@@ -547,7 +547,7 @@ const Profile = () => {
                   value={values.no_of_brothers}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('no_of_brothers')}
                   onChangeText={handleChange('no_of_brothers')}
                   label="No Of Brothers"
@@ -557,7 +557,7 @@ const Profile = () => {
                   value={values.no_of_brothers_married}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('no_of_brothers_married')}
                   onChangeText={handleChange('no_of_brothers_married')}
                   label="Number of Brothers Married"
@@ -567,7 +567,7 @@ const Profile = () => {
                   value={values.no_of_sisters}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('no_of_sisters')}
                   onChangeText={handleChange('no_of_sisters')}
                   label="Number of Sisters"
@@ -577,7 +577,7 @@ const Profile = () => {
                   value={values.no_of_sisters_married}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('no_of_sisters_married')}
                   onChangeText={handleChange('no_of_sisters_married')}
                   label="Number of Sisters Married"
@@ -588,7 +588,7 @@ const Profile = () => {
                   value={values.hobbies}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('hobbies')}
                   onChangeText={handleChange('hobbies')}
                   label="Hobbies"
@@ -598,7 +598,7 @@ const Profile = () => {
                   value={values.interests}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('interests')}
                   onChangeText={handleChange('interests')}
                   label="Intrests"
@@ -608,7 +608,7 @@ const Profile = () => {
                   value={values.about_me}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('about_me')}
                   onChangeText={handleChange('about_me')}
                   label="About Me"
