@@ -117,7 +117,7 @@ const ForgotPassword = () => {
                   value={values.email_id}
                   style={styles.Input}
                   autoCapitalize="none"
-                  autoCorrect="none"
+                  // autoCorrect="none"
                   onBlur={handleBlur('email_id')}
                   onChangeText={handleChange('email_id')}
                   left={<TextInput.Icon icon="email" />}

@@ -116,7 +116,7 @@ const Login = () => {
                                 value={values.email}
                                 style={styles.Input}
                                 autoCapitalize='none'
-                                autoCorrect='none'
+                                // autoCorrect='none'
                                 onBlur={handleBlur('email')}
                                 onChangeText={handleChange('email')}
                                 left={<TextInput.Icon icon="email" />}
@@ -130,7 +130,7 @@ const Login = () => {
                                 value={values.password}
                                 style={styles.Input2}
                                 autoCapitalize='none'
-                                autoCorrect='none'
+                                // autoCorrect='none'
                                 onBlur={handleBlur('password')}
                                 onChangeText={handleChange('password')}
                                 mode='outlined'

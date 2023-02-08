@@ -43,6 +43,11 @@ const MenuList = ({close}) => {
       route: 'view-profile',
       icon: 'account-edit',
     },
+    {
+      title: 'Subscription',
+      route: 'subscription',
+      icon: 'account-edit',
+    }
   ];
   const [menus, setMenus] = useState([...routes]);
 
