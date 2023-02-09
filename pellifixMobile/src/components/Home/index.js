@@ -95,7 +95,7 @@ const Home = () => {
   useEffect(() => {
     getDailyProfiles();
     getHoroscopicProfiles();
-    getPreferenceProfiles();
+    getPreferenceProfiles(); 
   },[]);
 
   const getDailyProfiles = async () => {

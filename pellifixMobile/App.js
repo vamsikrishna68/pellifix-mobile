@@ -1,6 +1,6 @@
 
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StatusBar
@@ -19,20 +19,22 @@ const theme = {
     tertiary: '#a1b2c3'
   },
 };
-
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
-
+  const [loginData, setLoginData] = useState()
   useEffect(() => {
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
-  }, [])
+    AsyncStorage.getItem('@storage_Key').then((res) => {
+      setLoginData(JSON.parse(res))
+    });
+  }, []);
+
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView>
-        <StatusBar color='#d53833'/>
-        <AppRoutes />
+        <StatusBar color='#d53833' />
+        <AppRoutes loginData={loginData} />
         <Outlet />
         <Toast />
       </SafeAreaView>

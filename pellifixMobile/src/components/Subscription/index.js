@@ -67,31 +67,17 @@ const Subscription = () => {
 
     return (
         <>
-            <View
+           <View
                 style={{
-                    backgroundColor: '#d53833',
-                    justifyContent: 'flex-start',
                     alignItems: 'center',
-                    height: 70,
                     width: '100%',
                     flexDirection: 'row',
+                    margin: 20,
                 }}>
-                <TouchableOpacity
-                    style={{
-                        width: '20%',
-                        justifyContent: 'flex-start',
-                        paddding: 10,
-                        alignItems: 'center',
-                    }}
-                    onPress={() => navigate('/auth/home')}>
-                    <Icon name="chevron-left" size={35} color="white" />
-                </TouchableOpacity>
                 <Text
                     style={{
-                        color: 'white',
-                        width: '80%',
                         textAlign: 'left',
-                        fontSize: 20,
+                        fontSize: 22,
                     }}>
                     Subscription
                 </Text>

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Dimensions, Image, ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
 import MenuList from './MenuList';
 import {
   Appbar,
@@ -11,8 +11,9 @@ import {
   Paragraph,
   Menu,
 } from 'react-native-paper';
-import {Drawer} from 'react-native-material-drawer';
-import {Outlet, useNavigate} from 'react-router-native';
+import { Drawer } from 'react-native-material-drawer';
+import { Outlet, useNavigate } from 'react-router-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -39,13 +40,17 @@ const Layout = () => {
     },
   });
 
+  const handleLogout = () => {
+    navigate('/login');
+    AsyncStorage.removeItem('@storage_Key')
+  }
   return (
     <View>
       <Appbar.Header
         dark={true}
         mode="small"
         statusBarHeight={1}
-        style={{backgroundColor: '#d53833', color: 'white'}}>
+        style={{ backgroundColor: '#d53833', color: 'white' }}>
         <Appbar.Action
           color="white"
           icon="menu"
@@ -59,7 +64,7 @@ const Layout = () => {
           onDismiss={closeMenu}
           anchor={
             <Button
-              labelStyle={{fontSize: 24, color: 'white'}}
+              labelStyle={{ fontSize: 24, color: 'white' }}
               icon="account-circle"
               onPress={openMenu}></Button>
           }>
@@ -72,9 +77,7 @@ const Layout = () => {
             title="Profile"
           />
           <Menu.Item
-            onPress={() => {
-              navigate('/');
-            }}
+            onPress={handleLogout}
             title="Logout"
           />
         </Menu>

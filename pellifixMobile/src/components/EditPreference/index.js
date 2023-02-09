@@ -504,7 +504,7 @@ const EditPreference = () => {
                           <TextInput
                             style={styles.Input}
                             autoCapitalize="none"
-                            autoCorrect="none"
+                            // autoCorrect="none"
                             onChangeText={item.handleChange}
                             mode="outlined"
                             label="Company Name"

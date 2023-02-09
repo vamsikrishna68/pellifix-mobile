@@ -14,8 +14,8 @@ const MenuList = ({close}) => {
       icon: 'home',
     },
     {
-      title: 'Whist List',
-      route: 'whist-list',
+      title: 'Wish List',
+      route: 'wish-list',
       icon: 'heart',
     },
     {

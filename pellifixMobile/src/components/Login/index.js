@@ -71,6 +71,7 @@ const Login = () => {
             color: 'red'
         }
     })
+
     return (
         <View style={styles.Container}>
             <Card style={styles.Card} elevation={1}>
@@ -79,12 +80,12 @@ const Login = () => {
                         validationSchema={loginValidationSchema}
                         initialValues={{ email: '', password: '' }}
                         onSubmit={values => {
-                            console.log(values, "va;ue")
                             login(values.email, values.password).then(async res => {
 
                                 if (res.data) {
                                     let userData = JSON.stringify(res.data)
-                                    await AsyncStorage.setItem('@storage_Key', userData)
+                                    await AsyncStorage.setItem('@storage_Key', userData);
+
                                     Toast.show({
                                         type: 'success',
                                         position: 'bottom',
