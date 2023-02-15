@@ -19,7 +19,11 @@ export const forgotPasswordRequest = payload => {
 };
 
 export const submitOtp = payload => {
-  return axios.post('/customer/otp/verify', payload);
+  return axios.patch('/customer/otp/verify', payload);
+};
+
+export const resendOtp = payload => {
+  return axios.patch('/customer/otp/generate', payload);
 };
 
 export const getDropdownValues = () => {

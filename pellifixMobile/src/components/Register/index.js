@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'reac
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { register } from '../../services/api';
+import { register, submitOtp, resendOtp } from '../../services/api';
 import { useNavigate } from 'react-router-native';
 import Toast from 'react-native-toast-message';
 import SelectList from 'react-native-dropdown-select-list';
@@ -27,58 +27,32 @@ const Register = () => {
     { key: 'Others', value: 'Othersself' },
   ];
   const loginValidationSchema = yup.object().shape({});
-  const styles = StyleSheet.create({
-    Container: {
-      width: '100%',
-      height: Dimensions.get('window').height,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#d53833',
-    },
-    Title: {
-      color: '#d53833',
-      marginBottom: 30,
-    },
-    Card: {
-      width: Dimensions.get('window').width - 50,
-      marginBottom: 50,
-      borderRadius: 10,
-    },
-    CardInner: {
-      width: '100%',
-    },
-    Input: {
-      marginBottom: 20,
-      textAlign: 'auto',
-    },
-    Input2: {
-      marginBottom: 10,
-    },
-    Submit: {
-      marginTop: 30,
-      borderRadius: 4,
-    },
-    CardTitles: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    Subtitle: {
-      marginVertical: 0,
-      letterSpacing: 1.5,
-    },
-    Underline: {
-      textDecorationLine: 'underline',
-      color: '#d53833',
-    },
-    Error: {
-      fontSize: 10,
-      color: 'red',
-    },
-  });
+
+  const handleResendOtp = () => {
+    const payload = { mobileno: formData.mobileno };
+    resendOtp(payload).then(
+      async res => {
+        console.log(res, 'res');
+        if (res) {
+          Toast.show({
+            type: 'success',
+            position: 'bottom',
+            bottomOffset: 170,
+            text1: 'OTP has been sent to your mobile number.'
+          });
+        }
+      },
+      err => {
+        console.log(err, 'err');
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          bottomOffset: 170,
+          text1: 'Try Again!',
+        });
+      },
+    );
+  }
   return (
     <>
       <View
@@ -101,12 +75,7 @@ const Register = () => {
           <Icon name="chevron-left" size={35} color="white" />
         </TouchableOpacity>
         <Text
-          style={{
-            color: 'white',
-            width: '80%',
-            textAlign: 'left',
-            fontSize: 20,
-          }}>
+          style={styles.backIcon}>
           Back
         </Text>
       </View>
@@ -152,12 +121,12 @@ const Register = () => {
                       }
                     },
                     err => {
-                      console.log(err, 'err');
+                      console.log(err.response, 'err');
                       Toast.show({
                         type: 'error',
                         position: 'bottom',
                         bottomOffset: 170,
-                        text1: 'Try Again!',
+                        text1: err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!',
                       });
                     },
                   );
@@ -293,15 +262,16 @@ const Register = () => {
                   };
                   console.log(payload, "paylaod")
 
-                  register(payload).then(
+                  submitOtp(payload).then(
                     async res => {
                       console.log(res, 'res');
-                      if (res.data) {
-                        toast.success('Registration successfully completed!', {
-                          position: 'top-right',
-                          autoClose: 3000,
-                          theme: 'colored',
-                          transition: Zoom,
+                      if (res) {
+                        Toast.show({
+                          position: 'bottom',
+                          autoClose: 4000,
+                          type: 'success',
+                          bottomOffset: 170,
+                          text1: 'Registration successfully completed!'
                         });
                         navigate('/login');
                       }
@@ -346,6 +316,11 @@ const Register = () => {
                       label="OTP"
                       mode="outlined"
                     />
+                    <TouchableOpacity onPress={handleResendOtp} style={styles.resendOtpView}>
+                      <Text variant="titleMedium" style={styles.resendOtp}>
+                        Resend OTP
+                      </Text>
+                    </TouchableOpacity>
                     <Button
                       style={styles.Submit}
                       mode="contained"
@@ -362,5 +337,74 @@ const Register = () => {
     </>
   );
 };
+
+
+const styles = StyleSheet.create({
+  Container: {
+    width: '100%',
+    height: Dimensions.get('window').height,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#d53833',
+  },
+  Title: {
+    color: '#d53833',
+    marginBottom: 30,
+  },
+  Card: {
+    width: Dimensions.get('window').width - 50,
+    marginBottom: 50,
+    borderRadius: 10,
+  },
+  CardInner: {
+    width: '100%',
+  },
+  Input: {
+    marginBottom: 20,
+    textAlign: 'auto',
+  },
+  Input2: {
+    marginBottom: 10,
+  },
+  Submit: {
+    marginTop: 30,
+    borderRadius: 4,
+  },
+  CardTitles: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  Subtitle: {
+    marginVertical: 0,
+    letterSpacing: 1.5,
+  },
+  Underline: {
+    textDecorationLine: 'underline',
+    color: '#d53833',
+  },
+  Error: {
+    fontSize: 10,
+    color: 'red',
+  },
+  resendOtp: {
+    textAlign: 'right',
+    fontSize: 16,
+    color: 'blue',
+  },
+  backIcon: {
+    color: 'white',
+    width: '80%',
+    textAlign: 'left',
+    fontSize: 20,
+  },
+  resendOtpView: {
+    cursor: 'pointer'
+  }
+});
+
 
 export default Register;
