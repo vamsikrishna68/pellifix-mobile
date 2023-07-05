@@ -1,14 +1,20 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {Card, Text, TextInput, Button, Paragraph} from 'react-native-paper';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Text, Button } from 'react-native-paper';
 import moment from 'moment';
+import { useNavigate, useLocation } from 'react-router-native';
+import * as enums from '../Chat/utils/enums';
+import { CometChat } from '@cometchat-pro/react-native-chat';
 
-const ViewProfile = () => {
+const ViewProfile = (props) => {
+  let navigate = useNavigate();
+  const location = useLocation();
+
   const styles = StyleSheet.create({
     Container: {
       width: '100%',
-      paddingLeft:15,
-      paddingTop:15
+      paddingLeft: 15,
+      paddingTop: 15
     },
     Title: {
       marginBottom: 20,
@@ -18,7 +24,7 @@ const ViewProfile = () => {
       color: '#d53833',
       fontWeight: '600',
       marginBottom: 5,
-      minWidth:160
+      minWidth: 160
     },
     Value: {
       fontSize: 16,
@@ -29,7 +35,7 @@ const ViewProfile = () => {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent:'space-between',
+      justifyContent: 'space-between',
     },
   });
   const data = {
@@ -99,219 +105,244 @@ const ViewProfile = () => {
     district: '',
     images: [],
   };
+
+  const startchat = async (id) => {
+    chatClicked(location.state.userDetails, CometChat.RECEIVER_TYPE.USER,);
+  };
+
+  const chatClicked = (item, type) => {
+    navigate(
+      `/auth/${enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES}`,
+      {
+        state: {
+          ...location.state
+        }
+      },
+    );
+  };
+
   return (
     <View style={styles.Container}>
-      <ScrollView style={{marginBottom:120}}>
-      <Text style={styles.Title} variant="titleLarge">
-        Personal Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Name</Text>
-          <Text style={styles.Value}>{data.name}</Text>
+      <ScrollView style={{ marginBottom: 120 }}>
+        <Text style={styles.Title} variant="titleLarge">
+          Personal Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Name</Text>
+            <Text style={styles.Value}>{data.name}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Surname</Text>
+            <Text style={styles.Value}>{data.surname}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Surname</Text>
-          <Text style={styles.Value}>{data.surname}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Gender</Text>
+            <Text style={styles.Value}>{data.gender}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Date Of Birth</Text>
+            <Text style={styles.Value}>{moment(data.dob).format('yyyy-MM-DD')}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Gender</Text>
-          <Text style={styles.Value}>{data.gender}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Physical Status</Text>
+            <Text style={styles.Value}>{data.physical_status}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Body Type</Text>
+            <Text style={styles.Value}>{data.body_type}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Date Of Birth</Text>
-          <Text style={styles.Value}>{moment(data.dob).format('yyyy-MM-DD')}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Weight</Text>
+            <Text style={styles.Value}>{data.weight}Kgs</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Height</Text>
+            <Text style={styles.Value}>{data.height}cms</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Physical Status</Text>
-          <Text style={styles.Value}>{data.physical_status}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Mother Toungue</Text>
+            <Text style={styles.Value}>{data.mother_tongue}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Marital Status</Text>
+            <Text style={styles.Value}>{data.marital_status}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Body Type</Text>
-          <Text style={styles.Value}>{data.body_type}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Eating Habits</Text>
+            <Text style={styles.Value}>{data.eating_habit}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Smoking Habit</Text>
+            <Text style={styles.Value}>{data.smoking_habit}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Weight</Text>
-          <Text style={styles.Value}>{data.weight}Kgs</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Drinking Habits</Text>
+            <Text style={styles.Value}>{data.drinking_habit}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Height</Text>
-          <Text style={styles.Value}>{data.height}cms</Text>
+        <Button
+          onPress={() => startchat(3)}
+          variant="contained"
+          buttonColor='red'
+          textColor='white'
+          width={200}
+        >
+          Chat now
+        </Button>
+        <Text style={styles.Title} variant="titleLarge">
+          Religion & Caste Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Caste</Text>
+            <Text style={styles.Value}>{data.caste}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Religion</Text>
+            <Text style={styles.Value}>{data.religion}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Mother Toungue</Text>
-          <Text style={styles.Value}>{data.mother_tongue}</Text>
+        <Text style={styles.Title} variant="titleLarge">
+          Horoscopic Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Nakshatram</Text>
+            <Text style={styles.Value}>{data.star}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Raasi</Text>
+            <Text style={styles.Value}>{data.zodiac}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Marital Status</Text>
-          <Text style={styles.Value}>{data.marital_status}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Time of Birth</Text>
+            <Text style={styles.Value}>{data.time_of_birth ? data.time_of_birth : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Eating Habits</Text>
-          <Text style={styles.Value}>{data.eating_habit}</Text>
+        <Text style={styles.Title} variant="titleLarge">
+          Address Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Country</Text>
+            <Text style={styles.Value}>{data.country}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Citizen</Text>
+            <Text style={styles.Value}>{data.citizen}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Smoking Habit</Text>
-          <Text style={styles.Value}>{data.smoking_habit}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>State</Text>
+            <Text style={styles.Value}>{data.state}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>District</Text>
+            <Text style={styles.Value}>{data.district ? data.district : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Drinking Habits</Text>
-          <Text style={styles.Value}>{data.drinking_habit}</Text>
+
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Town/City</Text>
+            <Text style={styles.Value}>{data.city ? data.city : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-        Religion & Caste Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Caste</Text>
-          <Text style={styles.Value}>{data.caste}</Text>
+        <Text style={styles.Title} variant="titleLarge">
+          Professional Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Higher Qualification</Text>
+            <Text style={styles.Value}>{data.education ? data.education : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Employed In</Text>
+            <Text style={styles.Value}>{data.employeed_in ? data.employeed_in : '-'}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Religion</Text>
-          <Text style={styles.Value}>{data.religion}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Occupation</Text>
+            <Text style={styles.Value}>{data.occupation ? data.occupation : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Annual Income</Text>
+            <Text style={styles.Value}>{data.salary ? data.salary : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-       Horoscopic Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Nakshatram</Text>
-          <Text style={styles.Value}>{data.star}</Text>
+        <Text style={styles.Title} variant="titleLarge">
+          Family Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Family Type</Text>
+            <Text style={styles.Value}>{data.family_type ? data.family_type : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Family Status In</Text>
+            <Text style={styles.Value}>{data.family_status ? data.family_status : '-'}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Raasi</Text>
-          <Text style={styles.Value}>{data.zodiac}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Fathers Occupation</Text>
+            <Text style={styles.Value}>{data.fathers_occupation ? data.fathers_occupation : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Mothers Occupation </Text>
+            <Text style={styles.Value}>{data.mothers_occupation ? data.mothers_occupation : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Time of Birth</Text>
-          <Text style={styles.Value}>{data.time_of_birth?data.time_of_birth:'-'}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>No of brothers</Text>
+            <Text style={styles.Value}>{data.no_of_brothers ? data.no_of_brothers : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>No of brothers married </Text>
+            <Text style={styles.Value}>{data.no_of_brothers_married ? data.no_of_brothers_married : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-       Address Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Country</Text>
-          <Text style={styles.Value}>{data.country}</Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>No of sisters</Text>
+            <Text style={styles.Value}>{data.no_of_sisters ? data.no_of_sisters : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>No of sisters married </Text>
+            <Text style={styles.Value}>{data.no_of_sisters_married ? data.no_of_brothers_married : '-'}</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.Key}>Citizen</Text>
-          <Text style={styles.Value}>{data.citizen}</Text>
+        <Text style={styles.Title} variant="titleLarge">
+          Other Info
+        </Text>
+        <View style={styles.ItemsContainer}>
+          <View>
+            <Text style={styles.Key}>Hobbies</Text>
+            <Text style={styles.Value}>{data.hobbies ? data.hobbies : '-'}</Text>
+          </View>
+          <View>
+            <Text style={styles.Key}>Intrests</Text>
+            <Text style={styles.Value}>{data.interests ? data.interests : '-'}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>State</Text>
-          <Text style={styles.Value}>{data.state}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>District</Text>
-          <Text style={styles.Value}>{data.district?data.district:'-'}</Text>
-        </View>
-      </View>
-  
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Town/City</Text>
-          <Text style={styles.Value}>{data.city?data.city:'-'}</Text>
-        </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-       Professional Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Higher Qualification</Text>
-          <Text style={styles.Value}>{data.education?data.education:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>Employed In</Text>
-          <Text style={styles.Value}>{data.employeed_in?data.employeed_in:'-'}</Text>
-        </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Occupation</Text>
-          <Text style={styles.Value}>{data.occupation?data.occupation:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>Annual Income</Text>
-          <Text style={styles.Value}>{data.salary?data.salary:'-'}</Text>
-        </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-       Family Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Family Type</Text>
-          <Text style={styles.Value}>{data.family_type?data.family_type:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>Family Status In</Text>
-          <Text style={styles.Value}>{data.family_status?data.family_status:'-'}</Text>
-        </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Fathers Occupation</Text>
-          <Text style={styles.Value}>{data.fathers_occupation?data.fathers_occupation:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>Mothers Occupation </Text>
-          <Text style={styles.Value}>{data.mothers_occupation?data.mothers_occupation:'-'}</Text>
-        </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>No of brothers</Text>
-          <Text style={styles.Value}>{data.no_of_brothers?data.no_of_brothers:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>No of brothers married </Text>
-          <Text style={styles.Value}>{data.no_of_brothers_married?data.no_of_brothers_married:'-'}</Text>
-        </View>
-      </View>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>No of sisters</Text>
-          <Text style={styles.Value}>{data.no_of_sisters?data.no_of_sisters:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>No of sisters married </Text>
-          <Text style={styles.Value}>{data.no_of_sisters_married?data.no_of_brothers_married:'-'}</Text>
-        </View>
-      </View>
-      <Text style={styles.Title} variant="titleLarge">
-       Other Info
-      </Text>
-      <View style={styles.ItemsContainer}>
-        <View>
-          <Text style={styles.Key}>Hobbies</Text>
-          <Text style={styles.Value}>{data.hobbies?data.hobbies:'-'}</Text>
-        </View>
-        <View>
-          <Text style={styles.Key}>Intrests</Text>
-          <Text style={styles.Value}>{data.interests?data.interests:'-'}</Text>
-        </View>
-      </View>
       </ScrollView>
     </View>
   );

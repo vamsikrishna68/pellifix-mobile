@@ -68,3 +68,25 @@ export const updateProfileData =(payload)=>{
     body: payload,
   })
 }
+
+export const sendChatId = (payload) => {
+  return apiService({
+    url: "/users/chats/start",
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const getSecret = () => {
+  return apiService({
+    url: "/users/chats/token",
+    method: "GET",
+  });
+};
+
+export const getMembership = () => {
+  return apiService({
+    url: "/profiles/membership",
+    method: "GET",
+  });
+};

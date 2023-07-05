@@ -7,9 +7,14 @@ import { login } from '../../services/api'
 import { useNavigate } from "react-router-native";
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COMETCHAT_CONSTANTS } from '../Chat/CONSTS';
+import { useDispatch } from 'react-redux';
+import * as actions from '../../store/action';
 
 const Login = () => {
     let navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const loginValidationSchema = yup.object().shape({
         email: yup
             .string()
@@ -83,16 +88,20 @@ const Login = () => {
                             login(values.email, values.password).then(async res => {
 
                                 if (res.data) {
+                                    await dispatch(
+                                        actions.auth(res.data.profile_id, COMETCHAT_CONSTANTS.AUTH_KEY, false),
+                                    );
                                     let userData = JSON.stringify(res.data)
                                     await AsyncStorage.setItem('@storage_Key', userData);
-
                                     Toast.show({
                                         type: 'success',
                                         position: 'bottom',
                                         bottomOffset: 170,
                                         text1: 'Authentication Successfull!',
                                     });
-                                    navigate('/auth/home')
+                                    setTimeout(() => {
+                                        navigate('/auth/home')
+                                    }, 2000)
                                 }
                             }, err => {
                                 console.log(err, "err")
@@ -142,12 +151,12 @@ const Login = () => {
                             {errors.password && touched.password &&
                                 <Text style={styles.Error}>{errors.password}</Text>
                             }
-                            <Paragraph onPress={()=>navigate('/forgot-password')}>Forgot Password?</Paragraph>
+                            <Paragraph onPress={() => navigate('/forgot-password')}>Forgot Password?</Paragraph>
                             <Button style={styles.Submit} mode="contained" onPress={handleSubmit}>
                                 Login
                             </Button>
                             <View style={styles.CardTitles}>
-                                <Text>Don't have Account? <Text  onPress={()=> navigate('/register')}  style={styles.Underline}>Register</Text></Text>
+                                <Text>Don't have Account? <Text onPress={() => navigate('/register')} style={styles.Underline}>Register</Text></Text>
                             </View>
 
                         </>
