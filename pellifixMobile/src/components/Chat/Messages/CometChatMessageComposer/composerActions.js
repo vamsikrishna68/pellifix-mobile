@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useCallback, useMemo } from 'react';
 import {
   TouchableWithoutFeedback,
   Text,
@@ -12,7 +12,8 @@ import {
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
+
 import style from './styles';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
@@ -31,9 +32,9 @@ export default class ComposerActions extends Component {
     };
   }
   componentDidUpdate(prevProps) {
-    if (!prevProps.visible && this.props.visible) {
-      this.sheetRef?.current?.snapTo(0);
-    }
+    // if (!prevProps.visible && this.props.visible) {
+    //   this.sheetRef?.current?.snapTo(0);
+    // }
   }
 
   componentDidMount() {
@@ -96,7 +97,7 @@ export default class ComposerActions extends Component {
             cameraType: 'back',
           },
           (response) => {
-            this.sheetRef?.current?.snapTo(1);
+            // this.sheetRef?.current?.snapTo(1);
             this.props.close();
             if (response.didCancel) {
               return null;
@@ -138,59 +139,59 @@ export default class ComposerActions extends Component {
         );
       }
     } catch (err) {
-      this.sheetRef?.current?.snapTo(1);
+      // this.sheetRef?.current?.snapTo(1);
       this.props.close();
     }
   };
 
   launchLibrary = (mediaType) => {
-    try{
-    launchImageLibrary(
-      {
-        mediaType: mediaType,
-        includeBase64: false,
-        cameraType: 'back',
-      },
-      (response) => {
-        this.sheetRef?.current?.snapTo(1);
-        this.props.close();
-        if (response.didCancel) {
-          return null;
-        }
-        let type = null;
-        let name = null;
-        if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
-          name = response.assets[0].fileName;
-          type = response.assets[0].type;
-        } else {
-          type = response.assets[0].type;
-          name = 'Camera_001.jpeg';
-        }
-        if (mediaType == 'video') {
-          type = 'video/quicktime';
-          name = 'Camera_002.mov';
-        }
-        const file = {
-          name:name,
-          type:
-            Platform.OS === 'android' && mediaType != 'video'
-              ? response.assets[0].type
-              : type,
-          uri:
-            Platform.OS === 'android'
-              ? response.assets[0].uri
-              : response.assets[0].uri.replace('file://', ''),
-        };
-        this.props.sendMediaMessage(
-          file,
-          mediaType === 'photo'
-            ? CometChat.MESSAGE_TYPE.IMAGE
-            : CometChat.MESSAGE_TYPE.VIDEO,
-        );
-      },
-    );
-    }catch (err) {
-      this.sheetRef?.current?.snapTo(1);
+    try {
+      launchImageLibrary(
+        {
+          mediaType: mediaType,
+          includeBase64: false,
+          cameraType: 'back',
+        },
+        (response) => {
+          // this.sheetRef?.current?.snapTo(1);
+          this.props.close();
+          if (response.didCancel) {
+            return null;
+          }
+          let type = null;
+          let name = null;
+          if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
+            name = response.assets[0].fileName;
+            type = response.assets[0].type;
+          } else {
+            type = response.assets[0].type;
+            name = 'Camera_001.jpeg';
+          }
+          if (mediaType == 'video') {
+            type = 'video/quicktime';
+            name = 'Camera_002.mov';
+          }
+          const file = {
+            name: name,
+            type:
+              Platform.OS === 'android' && mediaType != 'video'
+                ? response.assets[0].type
+                : type,
+            uri:
+              Platform.OS === 'android'
+                ? response.assets[0].uri
+                : response.assets[0].uri.replace('file://', ''),
+          };
+          this.props.sendMediaMessage(
+            file,
+            mediaType === 'photo'
+              ? CometChat.MESSAGE_TYPE.IMAGE
+              : CometChat.MESSAGE_TYPE.VIDEO,
+          );
+        },
+      );
+    } catch (err) {
+      // this.sheetRef?.current?.snapTo(1);
       this.props.close();
     }
   };
@@ -206,7 +207,7 @@ export default class ComposerActions extends Component {
         uri: res[0].uri,
       };
       this.props.sendMediaMessage(file, CometChat.MESSAGE_TYPE.FILE);
-      this.sheetRef?.current?.snapTo(1);
+      // this.sheetRef?.current?.snapTo(1);
       this.props.close();
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -336,38 +337,33 @@ export default class ComposerActions extends Component {
   };
 
   renderHeader = () => <View style={style.header} />;
-
+  handleSheetChanges = (index) => {
+    console.log('handleSheetChanges', index);
+  };
   render() {
     const { visible, close } = this.props;
     return (
       <Modal transparent animated animationType="fade" visible={visible}
-          onRequestClose={() => { 
-            this.sheetRef?.current?.snapTo(1);
-            this.props.close()
-          }}>
+        onRequestClose={() => {
+          // this.sheetRef?.current?.snapTo(1);
+          this.props.close()
+        }}>
         <View style={style.bottomSheetContainer}>
           <TouchableWithoutFeedback
             onPress={() => {
-              this.sheetRef?.current?.snapTo(1);
+              // this.sheetRef?.current?.snapTo(1);
               this.props.close();
             }}>
             <View style={style.fullFlex}>
-              {this.state.snapPoints ? (
-                <BottomSheet
-                  ref={this.sheetRef}
-                  snapPoints={this.state.snapPoints}
-                  borderRadius={30}
-                  initialSnap={1}
-                  enabledInnerScrolling={false}
-                  enabledContentTapInteraction
-                  overdragResistanceFactor={10}
-                  renderContent={this.renderContent}
-                  renderHeader={this.renderHeader}
-                  onCloseEnd={() => {
-                    close();
-                  }}
-                />
-              ) : null}
+              <BottomSheet
+                ref={this.sheetRef}
+                index={1}
+                snapPoints={["25%", "50%", "90%"]}
+                onChange={this.handleSheetChanges}
+                enablePanDownToClose={true}
+              >
+                {this.renderContent}
+              </BottomSheet>
             </View>
           </TouchableWithoutFeedback>
         </View>

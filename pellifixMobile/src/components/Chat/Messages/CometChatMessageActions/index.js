@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, TouchableWithoutFeedback, View } from 'react-native';
 import style from './styles';
 import Actions from './actions';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default class CometChatMessageActions extends React.Component {
   sheetRef = React.createRef(null);
@@ -19,6 +19,10 @@ export default class CometChatMessageActions extends React.Component {
 
   renderHeader = () => <View style={style.header} />;
 
+  handleSheetChanges = (index) => {
+    console.log('handleSheetChanges', index);
+  };
+
   render() {
     const { open, close } = this.props;
     return (
@@ -30,20 +34,15 @@ export default class CometChatMessageActions extends React.Component {
               this.props.close();
             }}>
             <View style={style.fullFlex}>
-              <BottomSheet
+            <BottomSheet
                 ref={this.sheetRef}
-                snapPoints={[250, 0]}
-                borderRadius={30}
-                initialSnap={1}
-                enabledInnerScrolling={false}
-                renderHeader={this.renderHeader}
-                enabledContentTapInteraction
-                overdragResistanceFactor={10}
-                renderContent={this.renderContent}
-                onCloseEnd={() => {
-                  close();
-                }}
-              />
+                index={1}
+                snapPoints={["25%", "50%", "90%"]}
+                onChange={this.handleSheetChanges}
+                enablePanDownToClose={true}
+              >
+                {this.renderContent}
+              </BottomSheet>
             </View>
           </TouchableWithoutFeedback>
         </View>

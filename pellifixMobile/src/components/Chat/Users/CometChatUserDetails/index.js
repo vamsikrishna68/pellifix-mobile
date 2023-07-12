@@ -12,7 +12,7 @@ import {
 import { logger } from '../../utils/common';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import style from './styles';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import * as actions from '../../utils/actions';
 import { deviceHeight } from '../../utils/consts';
 import DropDownAlert from '../../Shared/DropDownAlert';
@@ -71,9 +71,6 @@ export default class CometChatUserDetails extends React.Component {
    * Update bottom sheet to 0th snap point if prop received as open
    */
   componentDidUpdate(prevProps) {
-    if (!prevProps.open && this.props.open) {
-      this.sheetRef.current.snapTo(0);
-    }
     if (JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item)) {
       this.setStatusForUser();
     }
@@ -110,7 +107,7 @@ export default class CometChatUserDetails extends React.Component {
 
         if (
           messageTimestamp.getUTCFullYear() ==
-            currentTimestamp.getUTCFullYear() &&
+          currentTimestamp.getUTCFullYear() &&
           messageTimestamp.getUTCMonth() == currentTimestamp.getUTCMonth() &&
           messageTimestamp.getUTCDate() == currentTimestamp.getUTCDate()
         ) {
@@ -123,7 +120,7 @@ export default class CometChatUserDetails extends React.Component {
           status = hours + ':' + minutes + ' ' + ampm.toUpperCase();
         } else if (
           messageTimestamp.getUTCFullYear() ==
-            currentTimestamp.getUTCFullYear() &&
+          currentTimestamp.getUTCFullYear() &&
           messageTimestamp.getUTCMonth() == currentTimestamp.getUTCMonth() &&
           messageTimestamp.getUTCDate() == currentTimestamp.getUTCDate() - 1
         ) {
@@ -151,6 +148,10 @@ export default class CometChatUserDetails extends React.Component {
     }
   };
 
+  handleSheetChanges = (index) => {
+    console.log('handleSheetChanges', index);
+  };
+
   render() {
     let blockUserText;
 
@@ -164,8 +165,8 @@ export default class CometChatUserDetails extends React.Component {
           name={this.props.item.name}
         />
         {this.props.item &&
-        this.props.item.blockedByMe &&
-        !this.state.restrictions?.isUserPresenceEnabled ? null : (
+          this.props.item.blockedByMe &&
+          !this.state.restrictions?.isUserPresenceEnabled ? null : (
           <CometChatUserPresence
             status={this.state.status}
             style={{ top: 35 }}
@@ -208,7 +209,7 @@ export default class CometChatUserDetails extends React.Component {
           this.props.actionGenerated(actions.SHOW_PROFILE);
         }}>
         <Text
-          style={[style.itemLinkStyle, { color: this.viewTheme.color.red}]}>
+          style={[style.itemLinkStyle, { color: this.viewTheme.color.red }]}>
           View Profile
         </Text>
       </TouchableOpacity>
@@ -271,72 +272,65 @@ export default class CometChatUserDetails extends React.Component {
         animated
         animationType="fade"
         visible={this.props.open}
-        onRequestClose = {() =>{
+        onRequestClose={() => {
           this.props.actionGenerated(actions.CLOSE_DETAIL);
         }} >
         <TouchableOpacity
           onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
           style={style.container}>
+
           <BottomSheet
             ref={this.sheetRef}
-            snapPoints={[deviceHeight - 80, 0]}
-            borderRadius={30}
-            initialSnap={0}
-            enabledInnerScrolling={false}
-            enabledContentTapInteraction
-            overdragResistanceFactor={10}
-            renderContent={() => {
-              return (
-                <TouchableHighlight>
-                <View style={style.reactionDetailsContainer}>
-                  <View
-                    style={[
-                      style.headerStyle,
-                      { borderColor: this.viewTheme.borderColor.primary },
-                    ]}>
-                    <TouchableOpacity
-                      style={style.headerCloseStyle}
-                      onPress={() =>
-                        this.props.actionGenerated(actions.CLOSE_DETAIL)
-                      }>
-                      <Icon
-                        name="keyboard-arrow-left"
-                        size={24}
-                        color="#000000"
-                        style={{ marginRight: 5 }}
-                      />
-                    </TouchableOpacity>
-                    <Text style={style.headerTitleStyle}>Details</Text>
-                  </View>
-                  <View style={style.userDetailContainer}>
-                    {avatar}
-                    <View style={style.userDetail}>
-                      <View>
-                        <Text style={style.userName}>
-                          {this.props.item.name}
-                        </Text>
-                      </View>
-                      {this.props.item && this.props.item.blockedByMe ? null : (
-                        <Text style={style.statusText} numberOfLines={1}>
-                          {this.state.status}
-                        </Text>
-                      )}
+            index={1}
+            snapPoints={["25%", "50%", "90%"]}
+            onChange={this.handleSheetChanges}
+            enablePanDownToClose={true}
+          >
+            <TouchableHighlight>
+              <View style={style.reactionDetailsContainer}>
+                <View
+                  style={[
+                    style.headerStyle,
+                    { borderColor: this.viewTheme.borderColor.primary },
+                  ]}>
+                  <TouchableOpacity
+                    style={style.headerCloseStyle}
+                    onPress={() =>
+                      this.props.actionGenerated(actions.CLOSE_DETAIL)
+                    }>
+                    <Icon
+                      name="keyboard-arrow-left"
+                      size={24}
+                      color="#000000"
+                      style={{ marginRight: 5 }}
+                    />
+                  </TouchableOpacity>
+                  <Text style={style.headerTitleStyle}>Details</Text>
+                </View>
+                <View style={style.userDetailContainer}>
+                  {avatar}
+                  <View style={style.userDetail}>
+                    <View>
+                      <Text style={style.userName}>
+                        {this.props.item.name}
+                      </Text>
                     </View>
-                  </View>
-                  <View style={style.optionsContainer}>
-                    {action}
-                    {blockUserView}
-
-                    {sharedMediaView}
+                    {this.props.item && this.props.item.blockedByMe ? null : (
+                      <Text style={style.statusText} numberOfLines={1}>
+                        {this.state.status}
+                      </Text>
+                    )}
                   </View>
                 </View>
-                </TouchableHighlight>
-              );
-            }}
-            onCloseEnd={() => {
-              this.props.actionGenerated(actions.CLOSE_DETAIL);
-            }}
-          />
+                <View style={style.optionsContainer}>
+                  {action}
+                  {blockUserView}
+
+                  {sharedMediaView}
+                </View>
+              </View>
+            </TouchableHighlight>
+          </BottomSheet>
         </TouchableOpacity>
         <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
       </Modal>

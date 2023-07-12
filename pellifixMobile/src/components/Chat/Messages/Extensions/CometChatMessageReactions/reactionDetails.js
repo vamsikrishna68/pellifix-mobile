@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   SectionList,
 } from 'react-native';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 import style from './styles';
 import { checkMessageForExtensionsData } from '../../../utils/common';
@@ -77,25 +77,26 @@ export default class ReactionDetails extends React.Component {
     );
   };
 
+  handleSheetChanges = (index) => {
+    console.log('handleSheetChanges', index);
+  };
+
   render() {
     const { visible, close } = this.props;
 
     return (
       <Modal transparent animated animationType="fade" visible={visible}>
         <View style={style.reactionDetailBottomSheet}>
+
           <BottomSheet
             ref={this.sheetRef}
-            snapPoints={[Dimensions.get('window').height - 80, 0]}
-            borderRadius={30}
-            initialSnap={1}
-            enabledInnerScrolling={false}
-            enabledContentTapInteraction
-            overdragResistanceFactor={10}
-            renderContent={this.renderContent}
-            onCloseEnd={() => {
-              close();
-            }}
-          />
+            index={1}
+            snapPoints={["25%", "50%", "90%"]}
+            onChange={this.handleSheetChanges}
+            enablePanDownToClose={true}
+          >
+            {this.renderContent}
+          </BottomSheet>
         </View>
       </Modal>
     );
