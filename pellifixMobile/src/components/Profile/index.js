@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ScrollView, Dimensions} from 'react-native';
-import {Card, Text, TextInput, Button, Paragraph} from 'react-native-paper';
-import {Formik} from 'formik';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
+import { Formik } from 'formik';
 import SelectList from 'react-native-dropdown-select-list';
 import * as yup from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -68,7 +68,7 @@ const Profile = () => {
         setProfileData(response.data);
         console.log(response.data, 'data');
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const validationSchema = yup.object().shape({
@@ -93,6 +93,11 @@ const Profile = () => {
     Submit: {
       marginTop: 10,
       borderRadius: 4,
+      width: '40%'
+    },
+    submitView: {
+      justifyContent: 'flex-end',
+      flexDirection: 'row'
     },
     Error: {
       fontSize: 10,
@@ -102,10 +107,6 @@ const Profile = () => {
 
   return (
     <View style={styles.Container}>
-      <Text></Text>
-      <Text style={styles.Title} variant="titleLarge">
-        Profile
-      </Text>
       {profileData ? (
         <Formik
           // validationSchema={validationSchema}
@@ -199,7 +200,7 @@ const Profile = () => {
             handleChange,
           }) => (
             <>
-              <ScrollView style={{height: height - 280}}>
+              <ScrollView style={{ height: height - 220 }}>
                 <TextInput
                   value={values.name}
                   style={styles.Input}
@@ -221,12 +222,12 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Gender"
                   searchPlaceholder="Search Gender"
                   setSelected={handleChange('gender')}
                   save={values.gender}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.GENDER
                       ? formatDropdownValues(dropDownValues?.GENDER)
@@ -244,11 +245,11 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Body Type"
                   searchPlaceholder="Search Body Type"
                   setSelected={handleChange('body_type')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues?.BODY_TYPES
                       ? formatDropdownValues(dropDownValues?.BODY_TYPES)
@@ -256,11 +257,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Physical Status"
                   searchPlaceholder="Search Physical Status"
                   setSelected={handleChange('PHYSICAL_STATUS')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.PHYSICAL_STATUS
                       ? formatDropdownValues(dropDownValues?.PHYSICAL_STATUS)
@@ -288,11 +289,11 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Marital Status"
                   searchPlaceholder="Search Marital Status"
                   setSelected={handleChange('marital_status')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.MARITAL_STATUS
                       ? formatDropdownValues(dropDownValues?.MARITAL_STATUS)
@@ -300,11 +301,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Mother Toungue"
                   searchPlaceholder="Search Mother Toungue"
                   setSelected={handleChange('mother_tongue')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.MOTHER_TOUNGE_LIST
                       ? formatDropdownValues(dropDownValues?.MOTHER_TOUNGE_LIST)
@@ -312,11 +313,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Smoking Habit"
                   searchPlaceholder="Search Smoking Habit"
                   setSelected={handleChange('smoking_habit')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.SMOKING
                       ? formatDropdownValues(dropDownValues?.SMOKING)
@@ -324,11 +325,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Eating Habit"
                   searchPlaceholder="Search Eating Habit"
                   setSelected={handleChange('eating_habit')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.FOOD
                       ? formatDropdownValues(dropDownValues?.FOOD)
@@ -336,11 +337,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Drinking Habit"
                   searchPlaceholder="Search Drinking Habit"
                   setSelected={handleChange('drinking_habit')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.DRINKING
                       ? formatDropdownValues(dropDownValues?.DRINKING)
@@ -348,11 +349,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Religion"
                   searchPlaceholder="Search Religion"
                   setSelected={handleChange('religion')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.RELIGION
                       ? formatDropdownValues(dropDownValues?.RELIGION)
@@ -360,11 +361,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Caste"
                   searchPlaceholder="Search Caste"
                   setSelected={handleChange('caste')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.CASTE
                       ? formatDropdownValues(dropDownValues?.CASTE)
@@ -372,11 +373,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Nakshtram"
                   searchPlaceholder="Search Nakshtram"
                   setSelected={handleChange('star')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.STAR_LIST
                       ? formatDropdownValues(dropDownValues?.STAR_LIST)
@@ -394,11 +395,11 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Country"
                   searchPlaceholder="Search Country"
                   setSelected={handleChange('country')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.COUNTRYS
                       ? formatDropdownValues(dropDownValues?.COUNTRYS)
@@ -406,11 +407,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Citizenship"
                   searchPlaceholder="Search Citizenship"
                   setSelected={handleChange('citizen')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.COUNTRYS
                       ? formatDropdownValues(dropDownValues?.COUNTRYS)
@@ -418,11 +419,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select State"
                   searchPlaceholder="Search State"
                   setSelected={handleChange('state')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.STATES
                       ? formatDropdownValues(dropDownValues?.STATES)
@@ -430,11 +431,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select District"
                   searchPlaceholder="Search District"
                   setSelected={handleChange('district')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.DISTRICTS
                       ? formatDropdownValues(dropDownValues?.DISTRICTS)
@@ -453,11 +454,11 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Higher Qualification"
                   searchPlaceholder="Search Higher Qualification"
                   setSelected={handleChange('education')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.EDUCATION
                       ? formatDropdownValues(dropDownValues?.EDUCATION)
@@ -476,11 +477,11 @@ const Profile = () => {
                 />
 
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Occupation"
                   searchPlaceholder="Search Occupation"
                   setSelected={handleChange('occupation')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.OCCUPATION
                       ? formatDropdownValues(dropDownValues?.OCCUPATION)
@@ -488,11 +489,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Annual Income"
                   searchPlaceholder="Search Annual Income"
                   setSelected={handleChange('salary')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.SALARY
                       ? formatDropdownValues(dropDownValues?.SALARY)
@@ -500,11 +501,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Family Type"
                   searchPlaceholder="Search Family Type"
                   setSelected={handleChange('family_type')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.FAMILY_TYPE
                       ? formatDropdownValues(dropDownValues?.FAMILY_TYPE)
@@ -512,11 +513,11 @@ const Profile = () => {
                   }
                 />
                 <SelectList
-                  dropdownStyles={{marginBottom: 20, marginTop: 0}}
+                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
                   placeholder="Select Family Status"
                   searchPlaceholder="Search Family Status"
                   setSelected={handleChange('family_status')}
-                  boxStyles={{marginBottom: 10, borderRadius: 4, marginTop: 10}}
+                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
                   data={
                     dropDownValues.FAMILY_STATUS
                       ? formatDropdownValues(dropDownValues?.FAMILY_STATUS)
@@ -615,12 +616,14 @@ const Profile = () => {
                   mode="outlined"
                 />
               </ScrollView>
-              <Button
-                style={styles.Submit}
-                mode="contained"
-                onPress={handleSubmit}>
-                Update
-              </Button>
+              <View style={styles.submitView}>
+                <Button
+                  style={styles.Submit}
+                  mode="contained"
+                  onPress={handleSubmit}>
+                  Update
+                </Button>
+              </View>
             </>
           )}
         </Formik>

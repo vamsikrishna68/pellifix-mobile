@@ -19,7 +19,11 @@ export const forgotPasswordRequest = payload => {
 };
 
 export const submitOtp = payload => {
-  return axios.post('/customer/otp/verify', payload);
+  return axios.patch('/customer/otp/verify', payload);
+};
+
+export const resendOtp = payload => {
+  return axios.patch('/customer/otp/generate', payload);
 };
 
 export const getDropdownValues = () => {
@@ -64,3 +68,25 @@ export const updateProfileData =(payload)=>{
     body: payload,
   })
 }
+
+export const sendChatId = (payload) => {
+  return apiService({
+    url: "/users/chats/start",
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const getSecret = () => {
+  return apiService({
+    url: "/users/chats/token",
+    method: "GET",
+  });
+};
+
+export const getMembership = () => {
+  return apiService({
+    url: "/profiles/membership",
+    method: "GET",
+  });
+};

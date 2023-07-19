@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import MenuList from './MenuList';
 import {
   Appbar,
@@ -12,11 +12,16 @@ import {
   Menu,
 } from 'react-native-paper';
 import { Drawer } from 'react-native-material-drawer';
-import { Outlet, useNavigate } from 'react-router-native';
+import { Outlet, useNavigate, useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import * as actions from '../../store/actions/cometChatActions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Layout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [visible, setVisible] = React.useState(false);
   const windowHeight = Dimensions.get('window').height;
@@ -42,46 +47,80 @@ const Layout = () => {
 
   const handleLogout = () => {
     navigate('/login');
-    AsyncStorage.removeItem('@storage_Key')
+    AsyncStorage.removeItem('@storage_Key');
+    dispatch(actions.logout())
   }
   return (
     <View>
-      <Appbar.Header
-        dark={true}
-        mode="small"
-        statusBarHeight={1}
-        style={{ backgroundColor: '#d53833', color: 'white' }}>
-        <Appbar.Action
-          color="white"
-          icon="menu"
-          onPress={() => {
-            setDrawerOpen(!drawerOpen);
-          }}
-        />
-        <Appbar.Content color="white" title="Pellifix" />
-        <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={
-            <Button
-              labelStyle={{ fontSize: 24, color: 'white' }}
-              icon="account-circle"
-              onPress={openMenu}></Button>
-          }>
-          {/* <Menu.Item onPress={() => { }} title="Profile" /> */}
-          <Menu.Item
+      {location.pathname === '/auth/home' ?
+        <Appbar.Header
+          dark={true}
+          mode="small"
+          statusBarHeight={1}
+          style={{ backgroundColor: '#d53833', color: 'white' }}>
+          <Appbar.Action
+            color="white"
+            icon="menu"
             onPress={() => {
-              closeMenu()
-              navigate('/auth/profile');
+              setDrawerOpen(!drawerOpen);
             }}
-            title="Profile"
           />
-          <Menu.Item
-            onPress={handleLogout}
-            title="Logout"
-          />
-        </Menu>
-      </Appbar.Header>
+          <Appbar.Content color="white" title="Pellifix" />
+          <Menu
+            visible={visible}
+            onDismiss={closeMenu}
+            anchor={
+              <Button
+                labelStyle={{ fontSize: 24, color: 'white' }}
+                icon="account-circle"
+                onPress={openMenu}></Button>
+            }>
+            {/* <Menu.Item onPress={() => { }} title="Profile" /> */}
+            <Menu.Item
+              onPress={() => {
+                closeMenu()
+                navigate('/auth/profile');
+              }}
+              title="Profile"
+            />
+            <Menu.Item
+              onPress={handleLogout}
+              title="Logout"
+            />
+          </Menu>
+        </Appbar.Header>
+        :
+        location.pathname !== '/auth/CometChatMessages' ?
+          <View
+            style={{
+              backgroundColor: '#d53833',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              height: 70,
+              width: '100%',
+              flexDirection: 'row',
+            }}>
+            <TouchableOpacity
+              style={{
+                width: '10%',
+                justifyContent: 'flex-start',
+                alignItems: 'start',
+              }}
+              onPress={() => navigate('/auth/home')}>
+              <Icon name="chevron-left" size={35} color="white" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                color: 'white',
+                width: '80%',
+                textAlign: 'center',
+                fontSize: 20,
+              }}>
+              {location && location.state.routeInfo && location.state.routeInfo.title}
+            </Text>
+          </View>
+          : null
+      }
 
       <View style={styles.container}>
         <Drawer
