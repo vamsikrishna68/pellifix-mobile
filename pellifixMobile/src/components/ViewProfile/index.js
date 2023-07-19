@@ -106,7 +106,7 @@ const ViewProfile = (props) => {
     images: [],
   };
 
-  const startchat = async (id) => {
+  const startchat = async () => {
     chatClicked(location.state.userDetails, CometChat.RECEIVER_TYPE.USER,);
   };
 
@@ -124,9 +124,22 @@ const ViewProfile = (props) => {
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 120 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <Button
+            onPress={startchat}
+            variant="contained"
+            buttonColor='red'
+            textColor='white'
+            width={100}
+            style={{ margin: 10 }}
+          >
+            Chat now
+          </Button>
+        </View>
         <Text style={styles.Title} variant="titleLarge">
           Personal Info
         </Text>
+
         <View style={styles.ItemsContainer}>
           <View>
             <Text style={styles.Key}>Name</Text>
@@ -193,15 +206,7 @@ const ViewProfile = (props) => {
             <Text style={styles.Value}>{data.drinking_habit}</Text>
           </View>
         </View>
-        <Button
-          onPress={() => startchat(3)}
-          variant="contained"
-          buttonColor='red'
-          textColor='white'
-          width={200}
-        >
-          Chat now
-        </Button>
+
         <Text style={styles.Title} variant="titleLarge">
           Religion & Caste Info
         </Text>

@@ -1,4 +1,4 @@
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../actionTypes/cometChatActionTypes';
 
 const initialState = {
   user: {},
@@ -49,7 +49,7 @@ const setAuthRedirectPath = (state, action) => {
   };
 };
 
-const reducer = (state = initialState, action) => {
+const cometChatReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_START:
       return authStart(state, action);
@@ -66,4 +66,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default cometChatReducer;

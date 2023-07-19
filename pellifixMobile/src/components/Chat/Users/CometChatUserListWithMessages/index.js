@@ -197,6 +197,7 @@ class CometChatUserListWithMessages extends React.Component {
           callMessage: this.state.callMessage,
           actionGenerated: this.actionHandler,
           composedThreadMessage: this.state.composedThreadMessage,
+          routeInfo: { title: 'View Profile' }
         }
       },
     );

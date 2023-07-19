@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import MenuList from './MenuList';
 import {
   Appbar,
@@ -15,7 +15,8 @@ import { Drawer } from 'react-native-material-drawer';
 import { Outlet, useNavigate, useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/action';
+import * as actions from '../../store/actions/cometChatActions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Layout = () => {
   }
   return (
     <View>
-      {location.pathname !== '/auth/CometChatMessages' ?
+      {location.pathname === '/auth/home' ?
         <Appbar.Header
           dark={true}
           mode="small"
@@ -88,7 +89,37 @@ const Layout = () => {
             />
           </Menu>
         </Appbar.Header>
-        : null
+        :
+        location.pathname !== '/auth/CometChatMessages' ?
+          <View
+            style={{
+              backgroundColor: '#d53833',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              height: 70,
+              width: '100%',
+              flexDirection: 'row',
+            }}>
+            <TouchableOpacity
+              style={{
+                width: '10%',
+                justifyContent: 'flex-start',
+                alignItems: 'start',
+              }}
+              onPress={() => navigate('/auth/home')}>
+              <Icon name="chevron-left" size={35} color="white" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                color: 'white',
+                width: '80%',
+                textAlign: 'center',
+                fontSize: 20,
+              }}>
+              {location && location.state.routeInfo && location.state.routeInfo.title}
+            </Text>
+          </View>
+          : null
       }
 
       <View style={styles.container}>

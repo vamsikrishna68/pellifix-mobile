@@ -9,7 +9,8 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COMETCHAT_CONSTANTS } from '../Chat/CONSTS';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/action';
+import * as actions from '../../store/actions/cometChatActions';
+import * as dashboardActions from '../../store/actions/dashboardActions';
 
 const Login = () => {
     let navigate = useNavigate();
@@ -91,6 +92,9 @@ const Login = () => {
                                     await dispatch(
                                         actions.auth(res.data.profile_id, COMETCHAT_CONSTANTS.AUTH_KEY, false),
                                     );
+                                    await dispatch(dashboardActions.fetchHoroscopicProfiles());
+                                    await dispatch(dashboardActions.fetchPreferenceProfiles());
+
                                     let userData = JSON.stringify(res.data)
                                     await AsyncStorage.setItem('@storage_Key', userData);
                                     Toast.show({

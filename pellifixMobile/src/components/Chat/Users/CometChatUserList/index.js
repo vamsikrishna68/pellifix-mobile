@@ -48,6 +48,7 @@ class CometChatUserList extends React.PureComponent {
       textInputFocused: false,
       showSmallHeader: false,
       restrictions: null,
+      userListWithHeaders: []
     };
     this.userListRef = React.createRef();
     this.textInputRef = React.createRef(null);
@@ -259,12 +260,20 @@ class CometChatUserList extends React.PureComponent {
       <CometChatUserListItem
         theme={this.theme}
         user={user}
+        index={index}
         selectedUser={this.state.selectedUser}
         clickHandler={this.handleClick}
+        handleFavourite={this.handleFavourite}
       />
     );
   };
 
+  handleFavourite = async (index) => {
+    let usersInfo = [...this.state.userList];
+    usersInfo[index]['isFavourite'] = !usersInfo[index]['isFavourite'];
+    console.log([...usersInfo])
+    await this.setState({ userList: usersInfo });
+  }
   /**
    * Return component for empty user list
    * @param
@@ -373,8 +382,8 @@ class CometChatUserList extends React.PureComponent {
   render() {
     const userList = [...this.state.userList];
 
-    const userListWithHeaders = [];
     let headerIndices = [0];
+    const userListWithHeaders = [];
     if (userList.length) {
       headerIndices = [];
       userList.forEach((user) => {
@@ -385,6 +394,7 @@ class CometChatUserList extends React.PureComponent {
         } else {
           userListWithHeaders.push({ value: user, header: false });
         }
+
       });
     }
 
@@ -394,23 +404,23 @@ class CometChatUserList extends React.PureComponent {
           onPress={() => {
             Keyboard.dismiss();
           }}>
-           <SwiperFlatList
+          <SwiperFlatList
             autoplay
             autoplayLoop
             index={0}
             data={userListWithHeaders}
             renderItem={this.renderUserView}
-            // contentContainerStyle={{ flexGrow: 1 }}
-            // ListEmptyComponent={this.listEmptyContainer}
-            // ItemSeparatorComponent={this.itemSeparatorComponent}
-            // keyExtractor={(item, index) => item.uid + '_' + index}
-            // stickyHeaderIndices={
-            //   Platform.OS === 'android' ? null : headerIndices
-            // }
-            // onScroll={this.handleScroll}
-            // onEndReached={this.endReached}
-            // onEndReachedThreshold={0.3}
-            // showsVerticalScrollIndicator={false}
+          // contentContainerStyle={{ flexGrow: 1 }}
+          // ListEmptyComponent={this.listEmptyContainer}
+          // ItemSeparatorComponent={this.itemSeparatorComponent}
+          // keyExtractor={(item, index) => item.uid + '_' + index}
+          // stickyHeaderIndices={
+          //   Platform.OS === 'android' ? null : headerIndices
+          // }
+          // onScroll={this.handleScroll}
+          // onEndReached={this.endReached}
+          // onEndReachedThreshold={0.3}
+          // showsVerticalScrollIndicator={false}
           />
         </TouchableWithoutFeedback>
         <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />

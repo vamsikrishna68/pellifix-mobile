@@ -1,6 +1,6 @@
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../actionTypes/cometChatActionTypes';
 
-import {CometChat} from '@cometchat-pro/react-native-chat';
+import { CometChat } from '@cometchat-pro/react-native-chat';
 
 export const authStart = () => {
   return {
@@ -35,7 +35,7 @@ export const createNewUser = (uid, authKey) => {
           dispatch(auth(uid, authKey));
         } else {
           dispatch(authFail(user));
-          
+
         }
       },
       (error) => {

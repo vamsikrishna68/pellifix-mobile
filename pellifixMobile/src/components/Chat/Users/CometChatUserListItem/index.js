@@ -9,7 +9,6 @@ import { Card, Paragraph, IconButton } from 'react-native-paper';
 const CometChatUserListItem = (props) => {
   const viewTheme = { ...theme, ...props.theme };
   const width = Dimensions.get('window').width;
-
   return (
     // <TouchableHighlight
     //   key={props.user.uid}
@@ -40,16 +39,17 @@ const CometChatUserListItem = (props) => {
     //     </View>
     //   </View>
     //  </TouchableHighlight>
-    <Card elevation={4} onPress={() => props.clickHandler(props.user)}>
+    <Card elevation={4} onPress={() => props.clickHandler(props.user)} style={{ margin: 10 }}>
       <Card.Title
         style={{ width: width - 15 }}
         title={props.user.name}
         subtitle="September 14, 2016"
-        right={props => (
+        right={iconprops => (
           <IconButton
-            {...props}
-            icon="cards-heart-outline"
-            onPress={() => { }}
+            {...iconprops}
+            icon={props.user && props.user.isFavourite ? 'cards-heart' : "heart-outline"}
+            onPress={() => props.handleFavourite(props.index)}
+            iconColor={props.user && props.user.isFavourite ? 'red' : 'gray'}
           />
         )}
       />
