@@ -67,21 +67,6 @@ const Subscription = () => {
 
     return (
         <>
-           <View
-                style={{
-                    alignItems: 'center',
-                    width: '100%',
-                    flexDirection: 'row',
-                    margin: 20,
-                }}>
-                <Text
-                    style={{
-                        textAlign: 'left',
-                        fontSize: 22,
-                    }}>
-                    Subscription
-                </Text>
-            </View>
             <Tabs disableSwipe={true} defaultIndex={0}>
                 {subscriptionPlans.map((item, index) => (
                     <TabScreen
@@ -108,76 +93,74 @@ const Subscription = () => {
 function renderTabInfo(item) {
     return (
         <ScrollView style={styles.scrollView} horizontal>
-            <View style={styles.Container}>
-                {item.packageTypes.map((planType, subindex) => {
-                    return <Card style={[styles.Card]} elevation={1} key={subindex}>
-                        <Card.Content style={styles.CardInner}>
-                            <View style={styles.row}>
-                                <View style={styles.halfWidth}>
-                                    <Text style={styles.planTitle}>{planType.title}</Text>
-                                </View>
-                                <View style={styles.halfWidth}>
-                                    <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
-                                </View>
+            {item.packageTypes.map((planType, subindex) => {
+                return <Card style={[styles.Card]} elevation={1} key={subindex}>
+                    <Card.Content style={styles.CardInner}>
+                        <View style={styles.row}>
+                            <View style={styles.halfWidth}>
+                                <Text style={styles.planTitle}>{planType.title}</Text>
                             </View>
-                            <Text style={styles.planActualAmount}>{`- ${planType.description1}`}</Text>
-                            <Text style={styles.planActualAmount}>{`- ${planType.description2}`}</Text>
-                            <Text style={styles.planActualAmount}>{`- ${planType.description3}`}</Text>
-                            <View style={[styles.row,{ borderTopWidth: 1, borderTopColor: 'grey', marginTop: 100 }]}>
-                                <View style={styles.halfWidth}>
-                                    <Text style={styles.totalAmount}>Total</Text>
-                                </View>
-                                <View style={styles.halfWidth}>
-                                    <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
-                                </View>
+                            <View style={styles.halfWidth}>
+                                <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
                             </View>
-                            <View style={styles.row}>
-                                <View style={styles.halfWidth}>
-                                    <Text style={styles.discountText}>Discount (8%)</Text>
-                                </View>
-                                <View style={styles.halfWidth}>
-                                    <Text style={[styles.discountText, styles.discountAmount]}>{`${planType.amount}`}</Text>
-                                </View>
+                        </View>
+                        <Text style={styles.planActualAmount}>{`- ${planType.description1}`}</Text>
+                        <Text style={styles.planActualAmount}>{`- ${planType.description2}`}</Text>
+                        <Text style={styles.planActualAmount}>{`- ${planType.description3}`}</Text>
+                        <View style={[styles.row, { borderTopWidth: 1, borderTopColor: 'grey', marginTop: 100 }]}>
+                            <View style={styles.halfWidth}>
+                                <Text style={styles.totalAmount}>Total</Text>
                             </View>
+                            <View style={styles.halfWidth}>
+                                <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.row}>
+                            <View style={styles.halfWidth}>
+                                <Text style={styles.discountText}>Discount (8%)</Text>
+                            </View>
+                            <View style={styles.halfWidth}>
+                                <Text style={[styles.discountText, styles.discountAmount]}>{`${planType.amount}`}</Text>
+                            </View>
+                        </View>
 
-                            <View style={styles.row}>
-                                <View style={styles.halfWidth}>
-                                    <Text style={styles.totalAmount}>You Pay</Text>
-                                </View>
-                                <View style={styles.halfWidth}>
-                                    <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
-                                </View>
+                        <View style={styles.row}>
+                            <View style={styles.halfWidth}>
+                                <Text style={styles.totalAmount}>You Pay</Text>
                             </View>
-
-                            <View style={styles.footer}>
-                                <TouchableOpacity
-                                    style={styles.button}>
-                                    <Text style={styles.buttonText}>Pay Now ₹4,900</Text>
-                                </TouchableOpacity>
-
-                                <Text style={styles.viewPackages}>Valid till 31-Jan-2023</Text>
+                            <View style={styles.halfWidth}>
+                                <Text style={[styles.totalAmount, styles.totalAmountRight]}>{`${planType.amount}`}</Text>
                             </View>
-                        </Card.Content>
-                    </Card>
-                })
-                }
-            </View>
+                        </View>
+
+                        <View style={styles.footer}>
+                            <TouchableOpacity
+                                style={styles.button}>
+                                <Text style={styles.buttonText}>Pay Now ₹4,900</Text>
+                            </TouchableOpacity>
+
+                            <Text style={styles.viewPackages}>Valid till 31-Jan-2023</Text>
+                        </View>
+                    </Card.Content>
+                </Card>
+            })
+            }
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    row:{
+    row: {
         flexDirection: 'row',
         width: '100%'
     },
-    halfWidth:{
+    halfWidth: {
         width: '50%'
     },
     scrollView: {
         backgroundColor: 'whitesmoke',
-        flex: 1,
-        marginBottom: 120
+        // flex: 1,
+        // marginBottom: -120
     },
     footer: {
         alignItems: 'center',
@@ -194,7 +177,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginBottom: 20,
     },
-  
+
     Container: {
         justifyContent: 'center',
         flexDirection: 'row',
@@ -204,10 +187,10 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 15,
         borderColor: 'lightgrey',
-        borderWidth: 3,
-
-  paddding: 0,
-display: 'flex'
+        borderWidth: 2,
+        paddding: 0,
+        display: 'flex',
+        marginBottom:270
     },
     CardInner: {
     },

@@ -61,12 +61,10 @@ const Profile = () => {
   };
 
   const getProfileData = async () => {
-    console.log('called');
     try {
       const response = await fetchProfileData();
       if (response) {
         setProfileData(response.data);
-        console.log(response.data, 'data');
       }
     } catch (error) { }
   };
@@ -113,7 +111,6 @@ const Profile = () => {
           initialValues={profileData}
           onSubmit={values => {
             const data = { ...values };
-            console.log(data, formData, "data");
             Object.keys(data).forEach((e) => {
               if (data[e] == null) {
                 data[e] = "";
@@ -177,7 +174,6 @@ const Profile = () => {
             updateProfileData(payload).then(
               res => {
                 if (res) {
-                  console.log(response.data, 'resp');
                   Toast.show({
                     type: 'success',
                     position: 'bottom',

@@ -15,7 +15,9 @@ import { Drawer } from 'react-native-material-drawer';
 import { Outlet, useNavigate, useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/actions/cometChatActions';
+import * as chatActions from '../../redux-store/actions/cometChatActions';
+import * as sidebarActions from '../../redux-store/actions/sidebarActions';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Layout = () => {
@@ -27,6 +29,7 @@ const Layout = () => {
   const windowHeight = Dimensions.get('window').height;
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  
   const styles = StyleSheet.create({
     container: {
       height: windowHeight,
@@ -48,7 +51,13 @@ const Layout = () => {
   const handleLogout = () => {
     navigate('/login');
     AsyncStorage.removeItem('@storage_Key');
-    dispatch(actions.logout())
+    dispatch(chatActions.logout())
+  }
+
+  const navigateToHome = () => {
+    navigate('/auth/home');
+    dispatch(sidebarActions.activeItem(location.state.routeInfo, 0));
+
   }
   return (
     <View>
@@ -65,7 +74,7 @@ const Layout = () => {
               setDrawerOpen(!drawerOpen);
             }}
           />
-          <Appbar.Content color="white" title="Pellifix" />
+          <Appbar.Content color="white" title="Pellifix" titleStyle={{ fontWeight: 'bold' }} />
           <Menu
             visible={visible}
             onDismiss={closeMenu}
@@ -79,7 +88,11 @@ const Layout = () => {
             <Menu.Item
               onPress={() => {
                 closeMenu()
-                navigate('/auth/profile');
+                navigate('/auth/profile', {
+                  state: {
+                    routeInfo: { title: 'Profile' }
+                  }
+                });
               }}
               title="Profile"
             />
@@ -106,7 +119,7 @@ const Layout = () => {
                 justifyContent: 'flex-start',
                 alignItems: 'start',
               }}
-              onPress={() => navigate('/auth/home')}>
+              onPress={navigateToHome}>
               <Icon name="chevron-left" size={35} color="white" />
             </TouchableOpacity>
             <Text
@@ -115,8 +128,9 @@ const Layout = () => {
                 width: '80%',
                 textAlign: 'center',
                 fontSize: 20,
+                fontWeight: 'bold'
               }}>
-              {location && location.state.routeInfo && location.state.routeInfo.title}
+              {location && location.state && location.state.routeInfo && location.state.routeInfo.title}
             </Text>
           </View>
           : null
@@ -125,8 +139,10 @@ const Layout = () => {
       <View style={styles.container}>
         <Drawer
           open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
           drawerContent={<MenuList close={() => setDrawerOpen(false)} />}
-          animationTime={250}>
+          animationTime={250}
+        >
           <View style={styles.body}>
             <Outlet />
           </View>

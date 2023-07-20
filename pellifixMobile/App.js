@@ -10,7 +10,7 @@ import AppRoutes from './src/routes'
 import Toast from 'react-native-toast-message';
 import { Outlet } from 'react-router-native'
 import { LogBox } from 'react-native';
-import { store, persistor } from './src/store/store';
+import { store, persistor } from './src/redux-store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { CometChat } from '@cometchat-pro/react-native-chat';

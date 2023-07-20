@@ -32,7 +32,6 @@ const Register = () => {
     const payload = { mobileno: formData.mobileno };
     resendOtp(payload).then(
       async res => {
-        console.log(res, 'res');
         if (res) {
           Toast.show({
             type: 'success',
@@ -105,7 +104,6 @@ const Register = () => {
                     dob: moment(values.dob).format('yyyy-MM-DD'),
                   };
                   delete payload.confirmPassword;
-                  console.log(payload, 'payload');
                   register(payload).then(
                     async res => {
                       console.log(res, 'res');
@@ -260,11 +258,9 @@ const Register = () => {
                     mobileno: `+91${values.mobileno}`,
                     otp: values.otp,
                   };
-                  console.log(payload, "paylaod")
 
                   submitOtp(payload).then(
                     async res => {
-                      console.log(res, 'res');
                       if (res) {
                         Toast.show({
                           position: 'bottom',

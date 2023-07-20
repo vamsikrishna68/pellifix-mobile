@@ -39,7 +39,6 @@ export const fetchHoroscopicProfiles = async () => {
 
 export const fetchPreferenceProfiles = async () => {
     const response = await getProfiles('preference');
-    console.log(response)
     if (response) {
         dispatch(getPreferenceMatches(response.data.data))
     }

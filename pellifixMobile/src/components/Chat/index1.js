@@ -64,7 +64,6 @@ const Chat = (props) => {
             );
         }
     };
-    console.log(props)
     return (
         <View>
         </View>

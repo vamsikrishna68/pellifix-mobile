@@ -10,7 +10,7 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import { useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CometChatUserListWithMessages from '../Chat/Users/CometChatUserListWithMessages';
-import * as dashboardActions from '../../store/actions/dashboardActions';
+import * as dashboardActions from '../../redux-store/actions/dashboardActions';
 
 const Home = () => {
   const navigate = useNavigate();

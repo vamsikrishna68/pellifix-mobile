@@ -9,8 +9,8 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COMETCHAT_CONSTANTS } from '../Chat/CONSTS';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/actions/cometChatActions';
-import * as dashboardActions from '../../store/actions/dashboardActions';
+import * as actions from '../../redux-store/actions/cometChatActions';
+import * as dashboardActions from '../../redux-store/actions/dashboardActions';
 
 const Login = () => {
     let navigate = useNavigate();

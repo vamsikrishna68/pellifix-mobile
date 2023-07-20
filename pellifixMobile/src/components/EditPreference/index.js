@@ -36,7 +36,7 @@ import {
   RELIGION,
   SMOKING_HABITS,
   STATE,
-} from '../../constants';
+} from '../../Constants/constants';
 const EditPreference = () => {
   let navigate = useNavigate();
   const [age, setAge] = useState([18, 60]);

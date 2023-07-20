@@ -271,7 +271,6 @@ class CometChatUserList extends React.PureComponent {
   handleFavourite = async (index) => {
     let usersInfo = [...this.state.userList];
     usersInfo[index]['isFavourite'] = !usersInfo[index]['isFavourite'];
-    console.log([...usersInfo])
     await this.setState({ userList: usersInfo });
   }
   /**
