@@ -16,11 +16,11 @@ const Home = () => {
   const navigate = useNavigate();
   const width = Dimensions.get('window').width;
   const dispatch = useDispatch();
-  const [dashboardInfo, setDashboardInfo] = useState({
+  const dashboardInfo = {
     dailyRecommendation: useSelector(state => state.dashboardReducer.dailyRecommendations),
     horoscopeMatches: useSelector(state => state.dashboardReducer.horoscopicMatches),
     preferenceMatches: useSelector(state => state.dashboardReducer.preferenceMatches)
-  });
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -36,7 +36,6 @@ const Home = () => {
   const handleFavourite = (index, type) => {
     let data = [...dashboardInfo[type]];
     data[index]['isFavourite'] = !data[index]['isFavourite'];
-    setDashboardInfo({ dashboardInfo, ...{ [type]: data } });
     if (type == 'preferenceMatches') {
       dispatch(dashboardActions.getPreferenceMatches(data))
     } else if (type == 'horoscopeMatches') {
@@ -122,7 +121,8 @@ const Home = () => {
 
                   <Card.Cover
                     style={{ width: width, height: 300 }}
-                    source={item.img}
+                    source={{ uri: item.image }}
+                    alt='img'
                   />
                   <Card.Content style={{ width: width - 20 }}>
                     <Paragraph>
@@ -166,7 +166,9 @@ const Home = () => {
 
                 <Card.Cover
                   style={{ width: width, height: 300 }}
-                  source={item.img}
+                  source={{ uri: item.image }}
+                  alt='img'
+
                 />
                 <Card.Content style={{ width: width - 20 }}>
                   <Paragraph>

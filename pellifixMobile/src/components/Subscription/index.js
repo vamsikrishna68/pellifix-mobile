@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         paddding: 0,
         display: 'flex',
-        marginBottom:270
+        marginBottom: Platform.OS === 'ios' ? 270 : 200
     },
     CardInner: {
     },

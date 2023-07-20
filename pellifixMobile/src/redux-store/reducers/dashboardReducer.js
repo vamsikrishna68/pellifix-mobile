@@ -29,6 +29,12 @@ const getPreferenceMatches = (state, action) => {
         preferenceMatches: action.preferenceMatches
     };
 };
+const authFail = (state, action) => {
+    return {
+        ...state,
+        error: action.error,
+    };
+};
 const dashboardReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.DAILY_RECOMMENDATIONS:
@@ -37,6 +43,8 @@ const dashboardReducer = (state = initialState, action) => {
             return getHoroscopicMatches(state, action);
         case actionTypes.PREFERENCE_MATCHES:
             return getPreferenceMatches(state, action);
+        case actionTypes.AUTH_FAIL:
+            return authFail(state, action);
         default:
             return state;
     }

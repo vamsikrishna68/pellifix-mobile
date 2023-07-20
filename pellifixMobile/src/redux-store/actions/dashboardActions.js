@@ -1,6 +1,6 @@
 import { getProfiles } from '../../services/api';
 import * as actionTypes from '../actionTypes/dashboardActionTypes';
-
+import { store, persistor } from '../store';
 export const getDailyRecommendations = (data) => {
     return {
         type: actionTypes.DAILY_RECOMMENDATIONS,
@@ -22,24 +22,38 @@ export const getPreferenceMatches = (data) => {
     }
 }
 
+export const authFail = (error) => {
+    return {
+        type: actionTypes.AUTH_FAIL,
+        error: error,
+    };
+};
+
 export const fetchDailyProfiles = async () => {
     const response = await getProfiles('daily');
     if (response) {
-        dispatch(getDailyRecommendations(response.data.data))
-        
+        store.dispatch(getDailyRecommendations(response.data.data))
     }
 };
 
-export const fetchHoroscopicProfiles = async () => {
-    const response = await getProfiles('horoscopic');
-    if (response) {
-        dispatch(getHoroscopicMatches(response.data.data))
+export const fetchHoroscopicProfiles = (type) => {
+    return async (dispatch) => {
+        const response = await getProfiles(type);
+        if (response && response.data && response.data.data) {
+            dispatch(getHoroscopicMatches(response.data.data))
+        } else {
+            dispatch(authFail(response.code))
+        }
     }
 };
 
-export const fetchPreferenceProfiles = async () => {
-    const response = await getProfiles('preference');
-    if (response) {
-        dispatch(getPreferenceMatches(response.data.data))
+export const fetchPreferenceProfiles =  (type) => {
+    return async (dispatch) => {
+        const response = await getProfiles(type);
+        if (response && response.data && response.data.data) {
+            dispatch(getPreferenceMatches(response.data.data))
+        } else {
+            dispatch(authFail(response.code))
+        }
     }
 };

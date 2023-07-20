@@ -36,6 +36,7 @@ const WishList = () => {
         <View style={{
             flex: 1,
             justifyContent: 'center',
+            marginBottom: 100
         }}>
             <FlatList
                 data={wishlistItems}
@@ -63,7 +64,7 @@ const WishList = () => {
                             />
                             <Card.Cover
                                 style={{ height: 300 }}
-                                source={require('../../assets/img/profiles/p1.jpg')}
+                                source={{ uri: item.image }}
                             />
                             <Card.Content>
                                 <Paragraph>
@@ -86,7 +87,7 @@ const WishList = () => {
 const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
-        width: '100%'
+        width: '100%',
     },
 
 });

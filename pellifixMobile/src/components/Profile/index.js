@@ -196,7 +196,7 @@ const Profile = () => {
             handleChange,
           }) => (
             <>
-              <ScrollView style={{ height: height - 220 }}>
+              <ScrollView style={{ height: Platform.OS == 'ios' ? height - 220 : height - 180 }}>
                 <TextInput
                   value={values.name}
                   style={styles.Input}

@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
   },
   Container: {
     width: '100%',
-    height: Dimensions.get('window').height - 80,
+    height: Platform.OS == 'ios' ? Dimensions.get('window').height - 80 : Dimensions.get('window').height - 40,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

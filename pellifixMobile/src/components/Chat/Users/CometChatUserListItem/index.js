@@ -57,6 +57,7 @@ const CometChatUserListItem = (props) => {
       <Card.Cover
         style={{ width: width, height: 300 }}
         source={{ uri: props.user.avatar }}
+        alt='img'
       />
       <Card.Content style={{ width: width - 20 }}>
         <Paragraph>

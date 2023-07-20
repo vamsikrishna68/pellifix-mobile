@@ -292,26 +292,30 @@ const CompareProfiles = () => {
             <ScrollView style={{ flex: 1 }}>
                 <View
                     style={styles.row}>
-                    <SelectList
-                        placeholder="Select"
-                        searchPlaceholder="Search"
-                        //   setSelected={handleChange('gender')}
-                        save={''}
-                        boxStyles={{ borderRadius: 4, marginRight: 20 }}
-                        data={
-                            []
-                        }
-                    />
-                    <SelectList
-                        placeholder="Select"
-                        searchPlaceholder="Search"
-                        //   setSelected={handleChange('gender')}
-                        save={''}
-                        boxStyles={{ borderRadius: 4, }}
-                        data={
-                            []
-                        }
-                    />
+                    <View style={styles.column}>
+                        <SelectList
+                            placeholder="Select"
+                            searchPlaceholder="Search"
+                            //   setSelected={handleChange('gender')}
+                            save={''}
+                            boxStyles={{ borderRadius: 4, marginHorizontal: 20 }}
+                            data={
+                                []
+                            }
+                        />
+                    </View>
+                    <View style={styles.column}>
+                        <SelectList
+                            placeholder="Select"
+                            searchPlaceholder="Search"
+                            //   setSelected={handleChange('gender')}
+                            save={''}
+                            boxStyles={{ borderRadius: 4,marginHorizontal: 20 }}
+                            data={
+                                []
+                            }
+                        />
+                    </View>
                 </View>
 
                 <View style={styles.submitView}>
