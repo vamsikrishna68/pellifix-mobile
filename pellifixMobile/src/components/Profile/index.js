@@ -50,7 +50,6 @@ const Profile = () => {
     const response = await getDropdownValues();
     if (response) {
       setDropdownValues(response.data);
-      console.log(response.data, 'dpvalues');
     }
   };
   const formatDropdownValues = array => {

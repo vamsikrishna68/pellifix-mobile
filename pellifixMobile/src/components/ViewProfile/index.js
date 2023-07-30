@@ -125,16 +125,17 @@ const ViewProfile = (props) => {
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 120 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <Button
-            onPress={startchat}
-            variant="contained"
-            buttonColor='red'
-            textColor='white'
-            width={100}
-            style={{ margin: 10 }}
-          >
-            Chat now
-          </Button>
+          {location && location.state && location.state.type == CometChat.RECEIVER_TYPE.USER &&
+            <Button
+              onPress={startchat}
+              variant="contained"
+              buttonColor='red'
+              textColor='white'
+              width={100}
+              style={{ margin: 10 }}
+            >
+              Chat now
+            </Button>}
         </View>
         <Text style={styles.Title} variant="titleLarge">
           Personal Info

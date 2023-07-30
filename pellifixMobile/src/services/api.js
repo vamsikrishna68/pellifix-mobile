@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {apiService} from '.';
+import { apiService } from '.';
 
 axios.defaults.baseURL = 'https://api.pellifix.com/v1';
 
@@ -47,24 +47,24 @@ export const patchEditPreference = () => {
   });
 };
 
-export const getProfiles =(type)=>{
+export const getProfiles = (type) => {
   return apiService({
     url: `/matches/${type}`,
-    method:'GET'
+    method: 'GET'
   })
 }
 
-export const fetchProfileData =()=>{
+export const fetchProfileData = () => {
   return apiService({
     url: `/profiles`,
-    method:'GET'
+    method: 'GET'
   })
 }
 
-export const updateProfileData =(payload)=>{
+export const updateProfileData = (payload) => {
   return apiService({
     url: `/profiles`,
-    method:'PATCH',
+    method: 'PATCH',
     body: payload,
   })
 }
@@ -90,3 +90,17 @@ export const getMembership = () => {
     method: "GET",
   });
 };
+
+export const getCompareProfilesData = (payload) => {
+  return apiService({
+    url: `/profiles/compare?profile_ids=${payload.user1},${payload.user2}`,
+    method: 'GET'
+  })
+}
+
+export const getWishListData = () => {
+  return apiService({
+    url: `/users/shortlist`,
+    method: 'GET'
+  })
+}

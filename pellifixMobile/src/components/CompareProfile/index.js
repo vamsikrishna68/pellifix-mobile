@@ -14,76 +14,37 @@ import { useNavigate } from 'react-router-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SelectList from 'react-native-dropdown-select-list';
 import moment from 'moment';
+import { getCompareProfilesData, getWishListData } from '../../services/api';
 
 const CompareProfiles = () => {
     let navigate = useNavigate();
-    const data = {
-        id: 76,
-        profile_id: 'PM000076',
-        profile_creater: 'Self',
-        name: 'Sabareesh',
-        surname: 'Addepalli',
-        marital_status: 'Unmarried',
-        body_type: '4',
-        dob: '2022-11-16T00:00:00.000Z',
-        time_of_birth: '',
-        referral_code: '',
-        is_mobileno: false,
-        age: 28,
-        physical_status: 'Good',
-        height: 158,
-        weight: 85,
-        religion: 'Hindu',
-        caste: 'Kapu',
-        sub_caste: '',
-        zodiac: 'Scorpio',
-        star: 'Moola',
-        eating_habit: 'Non Vegeterian',
-        drinking_habit: 'No',
-        smoking_habit: 'No',
-        country: 'India',
-        city: 'Anakapalle',
-        state: 'Andhra Pradesh',
-        education: 'B.Tech',
-        occupation: 'Software Engineer',
-        employeed_in: 'Pellifix',
-        salary: '11.5L',
-        mobileno: '+918309890570',
-        image:
-            'https://img.pellifix.com/static/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpeg',
-        about_me: '',
-        require_details: '',
-        is_membership: false,
-        paid_status: null,
-        start_date: null,
-        end_date: null,
-        email_id: 'sabareesh.addepalli@gmail.com',
-        gender: 'Male',
-        profession: '',
-        address: '',
-        pincode: '',
-        interests: '',
-        hobbies: '',
-        no_of_sisters_married: 0,
-        no_of_sisters: 0,
-        no_of_brothers_married: 0,
-        no_of_brothers: 0,
-        mothers_occupation: '',
-        fathers_occupation: '',
-        family_status: '1',
-        family_type: 'Agriculture',
-        phoneno: '9894854545',
-        paid_date: null,
-        login_status: '0',
-        created_by: 0,
-        updated_by: 0,
-        created_at: '2022-11-16T14:47:14.000Z',
-        updated_at: '2023-01-21T06:08:53.000Z',
-        mother_tongue: 'Telugu',
-        citizen: 'India',
-        district: '',
-        images: [],
-    };
+    const [profilesData, setProfilesData] = useState([]);
+    const [usersList, setUsersList] = useState([]);
+    const [ids, setIds] = useState();
+    const [errorMessage, setErrorMessage] = useState();
+
+    useEffect(() => {
+        getWishList();
+    }, [])
+
+    const getWishList = async () => {
+        const response = await getWishListData().catch(console.log);
+        if (response) {
+            let data = response.data.data.map(item => ({
+                key: item.id,
+                value: item.name,
+            }));
+            setUsersList(data);
+        }
+    }
+    const getSelectedProfilesData = async () => {
+        const response = await getCompareProfilesData(ids).catch(console.log);
+        if (response) {
+            setProfilesData(response.data)
+        }
+    }
+
+
     const styles = StyleSheet.create({
         Submit: {
             borderRadius: 5,
@@ -94,8 +55,10 @@ const CompareProfiles = () => {
             flexDirection: 'row'
         },
         Error: {
-            fontSize: 10,
+            fontSize: 12,
             color: 'red',
+            textAlign: 'center',
+            margin: 5
         },
         row: {
             justifyContent: 'center',
@@ -133,19 +96,21 @@ const CompareProfiles = () => {
         },
     });
 
-    const renderProfileInfo = () => {
+    const renderProfileInfo = (index) => {
+        let data = profilesData && profilesData.length > 0 ? profilesData[index] : {};
         return (
             <View style={styles.column}>
-                <Image source={require('../../assets/img/profiles/p4.jpg')}
-                    style={styles.crossImg} height={100}
-                />
+                {data.image ?
+                    <Image source={{ uri: data.image }}
+                        style={styles.crossImg} height={100}
+                    /> : null}
                 <View>
                     <Text style={styles.Key}>Name</Text>
-                    <Text style={styles.Value}>{data.name + ' ' + data.surname}</Text>
+                    <Text style={styles.Value}>{data.name ? data.name : '-'}{data.surname ? ` ${data.surname}` : ''}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Gender</Text>
-                    <Text style={styles.Value}>{data.gender}</Text>
+                    <Text style={styles.Value}>{data.gender ? data.gender : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Date Of Birth</Text>
@@ -153,55 +118,55 @@ const CompareProfiles = () => {
                 </View>
                 <View>
                     <Text style={styles.Key}>Physical Status</Text>
-                    <Text style={styles.Value}>{data.physical_status}</Text>
+                    <Text style={styles.Value}>{data.physical_status ? data.physical_status : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Body Type</Text>
-                    <Text style={styles.Value}>{data.body_type}</Text>
+                    <Text style={styles.Value}>{data.body_type ? data.body_type : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Weight</Text>
-                    <Text style={styles.Value}>{data.weight}Kgs</Text>
+                    <Text style={styles.Value}>{data.weight ? `${data.weight}Kgs` : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Height</Text>
-                    <Text style={styles.Value}>{data.height}cms</Text>
+                    <Text style={styles.Value}>{data.height ? `${data.height}cms` : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Mother Toungue</Text>
-                    <Text style={styles.Value}>{data.mother_tongue}</Text>
+                    <Text style={styles.Value}>{data.mother_tongue ? data.mother_tongue : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Marital Status</Text>
-                    <Text style={styles.Value}>{data.marital_status}</Text>
+                    <Text style={styles.Value}>{data.marital_status ? data.marital_status : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Eating Habits</Text>
-                    <Text style={styles.Value}>{data.eating_habit}</Text>
+                    <Text style={styles.Value}>{data.eating_habit ? data.eating_habit : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Smoking Habit</Text>
-                    <Text style={styles.Value}>{data.smoking_habit}</Text>
+                    <Text style={styles.Value}>{data.smoking_habit ? data.smoking_habit : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Drinking Habits</Text>
-                    <Text style={styles.Value}>{data.drinking_habit}</Text>
+                    <Text style={styles.Value}>{data.drinking_habit ? data.drinking_habit : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Caste</Text>
-                    <Text style={styles.Value}>{data.caste}</Text>
+                    <Text style={styles.Value}>{data.caste ? data.caste : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Religion</Text>
-                    <Text style={styles.Value}>{data.religion}</Text>
+                    <Text style={styles.Value}>{data.religion ? data.religion : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Nakshatram</Text>
-                    <Text style={styles.Value}>{data.star}</Text>
+                    <Text style={styles.Value}>{data.star ? data.star : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Raasi</Text>
-                    <Text style={styles.Value}>{data.zodiac}</Text>
+                    <Text style={styles.Value}>{data.zodiac ? data.zodiac : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Time of Birth</Text>
@@ -209,15 +174,15 @@ const CompareProfiles = () => {
                 </View>
                 <View>
                     <Text style={styles.Key}>Country</Text>
-                    <Text style={styles.Value}>{data.country}</Text>
+                    <Text style={styles.Value}>{data.country ? data.country : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Citizen</Text>
-                    <Text style={styles.Value}>{data.citizen}</Text>
+                    <Text style={styles.Value}>{data.citizen ? data.citizen : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>State</Text>
-                    <Text style={styles.Value}>{data.state}</Text>
+                    <Text style={styles.Value}>{data.state ? data.state : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>District</Text>
@@ -287,6 +252,24 @@ const CompareProfiles = () => {
         )
     }
 
+    const handleChange = (value, name) => {
+        let selectedIds = ids;
+        // if (selectedIds) {
+        //     for (let item in selectedIds) {
+        //         if (selectedIds[item] == value) {
+        //             setErrorMessage('User is already selected. Please select another user..');
+        //             return;
+
+        //         } else {
+        //             setErrorMessage('');
+        //         }
+        //     }
+        // }
+        selectedIds = { ...selectedIds, [name]: value }
+        setIds(selectedIds);
+
+    }
+
     return (
         <View style={{ flex: 1, marginBottom: 150 }}>
             <ScrollView style={{ flex: 1 }}>
@@ -296,40 +279,38 @@ const CompareProfiles = () => {
                         <SelectList
                             placeholder="Select"
                             searchPlaceholder="Search"
-                            //   setSelected={handleChange('gender')}
+                            setSelected={(value) => handleChange(value, 'user1')}
                             save={''}
                             boxStyles={{ borderRadius: 4, marginHorizontal: 20 }}
-                            data={
-                                []
-                            }
+                            data={usersList}
                         />
                     </View>
                     <View style={styles.column}>
                         <SelectList
                             placeholder="Select"
                             searchPlaceholder="Search"
-                            //   setSelected={handleChange('gender')}
+                            setSelected={(value) => handleChange(value, 'user2')}
                             save={''}
-                            boxStyles={{ borderRadius: 4,marginHorizontal: 20 }}
-                            data={
-                                []
-                            }
+                            boxStyles={{ borderRadius: 4, marginHorizontal: 20 }}
+                            data={usersList}
                         />
                     </View>
                 </View>
-
+                {errorMessage && (
+                    <Text style={styles.Error}>{errorMessage}</Text>
+                )}
                 <View style={styles.submitView}>
                     <Button
                         style={styles.Submit}
-                        mode="contained">
-                        {/* // onPress={handleSubmit}> */}
+                        onPress={getSelectedProfilesData}
+                        mode="contained" disabled={ids && Object.keys(ids).length == 2 ? false : true}>
                         Compare
                     </Button>
                 </View>
 
                 <View style={styles.container}>
-                    {renderProfileInfo()}
-                    {renderProfileInfo()}
+                    {renderProfileInfo(0)}
+                    {renderProfileInfo(1)}
 
                 </View>
             </ScrollView>

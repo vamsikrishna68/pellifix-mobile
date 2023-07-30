@@ -14,7 +14,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = createStore(
   persistedReducer,
-  compose(applyMiddleware(ReduxThunk), applyMiddleware(logger)),
+  compose(applyMiddleware(ReduxThunk)),
+  // compose(applyMiddleware(ReduxThunk), applyMiddleware(logger)),
+
 );
 
 export const persistor = persistStore(store);
