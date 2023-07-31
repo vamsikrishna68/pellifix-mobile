@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ScrollView, ActivityIndicator } from 'react-native';
 import {
   Card,
   Text,
@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CometChatUserListWithMessages from '../Chat/Users/CometChatUserListWithMessages';
 import * as dashboardActions from '../../redux-store/actions/dashboardActions';
+import { addToWishList } from '../../services/api';
+import Toast from 'react-native-toast-message';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,6 +24,23 @@ const Home = () => {
     preferenceMatches: useSelector(state => state.dashboardReducer.preferenceMatches)
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    getDashboardData();
+  }, []);
+
+  const getDashboardData = () => {
+    setTimeout(async () => {
+      await dispatch(dashboardActions.fetchHoroscopicProfiles('horoscopic'));
+      await dispatch(dashboardActions.fetchPreferenceProfiles('preference'));
+      setIsLoading(false);
+
+    }, 3000);
+  }
+
   const styles = StyleSheet.create({
     container: {
       padding: 10,
@@ -31,27 +50,57 @@ const Home = () => {
       height: 300,
       backgroundColor: 'red',
     },
+    loaderContainer: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      opacity: 0.5,
+      backgroundColor: "#F5FCFF88",
+      zIndex: 1
+    },
+    paragraph: { textAlign: 'center', marginVertical: 10, color: 'gray' }
   });
 
-  const handleFavourite = (index, type) => {
+  const handleFavourite = async (index, type) => {
+    setIsLoading(true);
     let data = [...dashboardInfo[type]];
-    data[index]['isFavourite'] = !data[index]['isFavourite'];
-    if (type == 'preferenceMatches') {
-      dispatch(dashboardActions.getPreferenceMatches(data))
-    } else if (type == 'horoscopeMatches') {
-      dispatch(dashboardActions.getHoroscopicMatches(data))
-    } else {
-      dispatch(dashboardActions.getDailyRecommendations(data))
+
+    const payload = {
+      is_liked: !data[index]['is_liked'],
+      short_id: Number(data[index]['id']),
+    };
+    const response = await addToWishList(payload);
+    if (response && response.data && response.data.message) {
+      await getDashboardData();
+      Toast.show({
+        type: 'success',
+        position: 'bottom',
+        bottomOffset: 170,
+        text1: response.data.message,
+      });
     }
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {isLoading && <View style={styles.loaderContainer}>
+        <ActivityIndicator
+          size="large"
+          color={'red'}
+          animating={isLoading}
+        />
+      </View>
+      }
       <ScrollView style={styles.container} >
+
         <Text style={{ marginVertical: 15 }} variant="titleLarge">
           Daily Recommendations
         </Text>
-        <CometChatUserListWithMessages navigate={navigate} />
+        <CometChatUserListWithMessages navigate={navigate} handleFavourite={handleFavourite} />
 
         {/* {dailyRecommendation && dailyRecommendation.length && dailyRecommendation.length > 0 ? (
         <View style={{ height: 500 }}>
@@ -112,9 +161,9 @@ const Home = () => {
                     right={props => (
                       <IconButton
                         {...props}
-                        icon={item.isFavourite ? 'cards-heart' : "cards-heart-outline"}
+                        icon={item.is_liked ? 'cards-heart' : "cards-heart-outline"}
                         onPress={() => handleFavourite(index, 'horoscopeMatches')}
-                        iconColor={item.isFavourite ? 'red' : 'gray'}
+                        iconColor={item.is_liked ? 'red' : 'gray'}
                       />
                     )}
                   />
@@ -136,7 +185,7 @@ const Home = () => {
             />
           </View>
         ) : (
-          <Paragraph>No Data found!</Paragraph>
+          <Paragraph style={styles.paragraph}>No Data found!</Paragraph>
         )}
         <Text style={{ marginVertical: 5 }} variant="titleLarge">
           Preference Matches
@@ -157,9 +206,9 @@ const Home = () => {
                   right={props => (
                     <IconButton
                       {...props}
-                      icon={item.isFavourite ? 'cards-heart' : "cards-heart-outline"}
+                      icon={item.is_liked ? 'cards-heart' : "cards-heart-outline"}
                       onPress={() => handleFavourite(index, 'preferenceMatches')}
-                      iconColor={item.isFavourite ? 'red' : 'gray'}
+                      iconColor={item.is_liked ? 'red' : 'gray'}
                     />
                   )}
                 />
@@ -181,7 +230,7 @@ const Home = () => {
             )}
           />
         ) : (
-          <Paragraph>No Data found!</Paragraph>
+          <Paragraph style={styles.paragraph}>No Data found!</Paragraph>
         )}
       </ScrollView>
     </View>

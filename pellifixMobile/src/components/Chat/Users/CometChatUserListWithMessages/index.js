@@ -402,6 +402,7 @@ class CometChatUserListWithMessages extends React.Component {
             onItemClick={this.itemClicked}
             actionGenerated={this.actionHandler}
             navigation={this.props.navigate}
+            handleFavourite={this.props.handleFavourite}
           />
           {imageView}
           {this.state.isActive ?

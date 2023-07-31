@@ -85,6 +85,8 @@ const Login = () => {
                     <Formik
                         validationSchema={loginValidationSchema}
                         initialValues={{ email: 'senthamizh6991@gmail.com', password: '123456' }}
+                        // initialValues={{ email: '', password: '' }}
+
                         onSubmit={values => {
                             login(values.email, values.password).then(async res => {
 
@@ -92,10 +94,7 @@ const Login = () => {
                                     await dispatch(
                                         actions.auth(res.data.profile_id, COMETCHAT_CONSTANTS.AUTH_KEY, false),
                                     );
-                                    setTimeout(async () => {
-                                        await dispatch(dashboardActions.fetchHoroscopicProfiles('horoscopic'));
-                                        await dispatch(dashboardActions.fetchPreferenceProfiles('preference'));
-                                    }, 3000);
+                                   
                                     let userData = JSON.stringify(res.data)
                                     await AsyncStorage.setItem('@storage_Key', userData);
                                     Toast.show({

@@ -104,3 +104,11 @@ export const getWishListData = () => {
     method: 'GET'
   })
 }
+
+export const addToWishList = (payload) => {
+  return apiService({
+    url: "/users/shortlist",
+    method: "PATCH",
+    body: payload,
+  });
+};

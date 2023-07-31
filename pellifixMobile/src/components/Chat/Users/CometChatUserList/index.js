@@ -28,7 +28,9 @@ import * as enums from '../../utils/enums';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import DropDownAlert from '../../Shared/DropDownAlert';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-
+import {
+  Paragraph,
+} from 'react-native-paper';
 class CometChatUserList extends React.PureComponent {
   static contextType = CometChatContext;
 
@@ -403,26 +405,31 @@ class CometChatUserList extends React.PureComponent {
           onPress={() => {
             Keyboard.dismiss();
           }}>
-          <SwiperFlatList
-            autoplay
-            autoplayLoop
-            index={0}
-            data={userListWithHeaders}
-            renderItem={this.renderUserView}
-          // contentContainerStyle={{ flexGrow: 1 }}
-          // ListEmptyComponent={this.listEmptyContainer}
-          // ItemSeparatorComponent={this.itemSeparatorComponent}
-          // keyExtractor={(item, index) => item.uid + '_' + index}
-          // stickyHeaderIndices={
-          //   Platform.OS === 'android' ? null : headerIndices
-          // }
-          // onScroll={this.handleScroll}
-          // onEndReached={this.endReached}
-          // onEndReachedThreshold={0.3}
-          // showsVerticalScrollIndicator={false}
-          />
+          {userListWithHeaders && userListWithHeaders.length > 0 ?
+            <SwiperFlatList
+              autoplay
+              autoplayLoop
+              index={0}
+              data={userListWithHeaders}
+              renderItem={this.renderUserView}
+              // contentContainerStyle={{ flexGrow: 1 }}
+              ListEmptyComponent={this.listEmptyContainer}
+            // ItemSeparatorComponent={this.itemSeparatorComponent}
+            // keyExtractor={(item, index) => item.uid + '_' + index}
+            // stickyHeaderIndices={
+            //   Platform.OS === 'android' ? null : headerIndices
+            // }
+            // onScroll={this.handleScroll}
+            // onEndReached={this.endReached}
+            // onEndReachedThreshold={0.3}
+            // showsVerticalScrollIndicator={false}
+            />
+            : (
+              <Paragraph style={{ textAlign: 'center', marginVertical: 10, color: 'gray' }}>No Data found!</Paragraph>
+            )}
         </TouchableWithoutFeedback>
         <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+
 
       </CometChatContextProvider>
     );

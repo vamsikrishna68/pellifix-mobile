@@ -12,12 +12,41 @@ import { useNavigate } from 'react-router-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'react-native';
 import { useSelector } from 'react-redux';
+import { addToWishList, getWishListData } from '../../services/api';
+import Toast from 'react-native-toast-message';
 
 const WishList = () => {
-    const preferenceMatches = useSelector((state) => state.dashboardReducer.preferenceMatches);
-    const dailyRecommendation = useSelector(state => state.dashboardReducer.dailyRecommendations);
-    const horoscopeMatches = useSelector(state => state.dashboardReducer.horoscopicMatches);
-    const wishlistItems = [...dailyRecommendation, ...horoscopeMatches, ...preferenceMatches];
+
+    const [wishList, setWishlist] = useState([]);
+
+    useEffect(() => {
+        getWishlist();
+    }, []);
+
+    const getWishlist = async () => {
+        const response = await getWishListData();
+        if (response && response.data && response.data.data) {
+            setWishlist(response.data.data);
+        }
+    }
+
+    const handleFavourite = async (item) => {
+        const payload = {
+            is_liked: false,
+            short_id: Number(item['id']),
+        };
+        const response = await addToWishList(payload);
+        if (response && response.data.message) {
+            Toast.show({
+                type: 'success',
+                position: 'bottom',
+                bottomOffset: 170,
+                text1: response.data.message,
+            });
+        }
+        await getWishlist();
+    }
+
     const emptyListComponent = () => {
         return (
             <View style={{ alignSelf: 'center' }}>
@@ -32,49 +61,43 @@ const WishList = () => {
             </View>
         );
     };
+
     return (
         <View style={{
             flex: 1,
             justifyContent: 'center',
-            marginBottom: 100
+            marginBottom: 100,
+            alignItems:'center'
         }}>
             <FlatList
-                data={wishlistItems}
-                extraData={wishlistItems}
+                data={wishList}
+                extraData={wishList}
                 renderItem={({ item }) => {
-                    if (item.isFavourite) {
-                        return <Card style={{ margin: 10 }}>
-                            <Card.Title
-                                // // style={{ width: width - 15 }}
-                                // left={iconprops => (
-                                //     <Image source={require('../../assets/img/profiles/p1.jpg')}
-                                //         style={{ width: 50, height: 50, boarderRadius: 50 }}
-                                //         resizeMode='cover' />
-                                // )}
-                                title={item.name}
-                                subtitle="September 14, 2016"
-                                right={iconprops => (
-                                    <IconButton
-                                        {...iconprops}
-                                        icon={'cards-heart'}
-                                        // onPress={() => props.handleFavourite(props.index)}
-                                        iconColor={'red'}
-                                    />
-                                )}
-                            />
-                            <Card.Cover
-                                style={{ height: 300 }}
-                                source={{ uri: item.image }}
-                            />
-                            <Card.Content>
-                                <Paragraph>
-                                    This impressive paella is a perfect party dish and a fun
-                                    meal to cook together with your guests. Add 1 cup of frozen
-                                    peas along with the mussels, if you like.
-                                </Paragraph>
-                            </Card.Content>
-                        </Card>
-                    }
+                    return <Card style={{ margin: 10 }}>
+                        <Card.Title
+                            title={item.name}
+                            subtitle="September 14, 2016"
+                            right={iconprops => (
+                                <IconButton
+                                    {...iconprops}
+                                    icon={'cards-heart'}
+                                    onPress={() => handleFavourite(item)}
+                                    iconColor={'red'}
+                                />
+                            )}
+                        />
+                        <Card.Cover
+                            style={{ height: 300 }}
+                            source={{ uri: item.image }}
+                        />
+                        <Card.Content>
+                            <Paragraph>
+                                This impressive paella is a perfect party dish and a fun
+                                meal to cook together with your guests. Add 1 cup of frozen
+                                peas along with the mussels, if you like.
+                            </Paragraph>
+                        </Card.Content>
+                    </Card>
                 }
                 }
                 numColumns={1}
