@@ -114,7 +114,7 @@ const Subscription = () => {
             bottomOffset: 170,
             text1: message1,
             text2: message2,
-            text1NumberOfLines: 3
+            visibilityTime: 10000
         });
     };
 
@@ -168,7 +168,9 @@ const Subscription = () => {
                     type: 'success',
                     position: 'bottom',
                     bottomOffset: 170,
-                    text1: `Payment Successful: Order ID - ${data.razorpay_payment_id}`
+                    text1: `Payment Successful: `,
+                    text2: `Order ID - ${data.razorpay_payment_id}`,
+                    visibilityTime: 10000
                 });
             })
             .catch(errorRes => {
