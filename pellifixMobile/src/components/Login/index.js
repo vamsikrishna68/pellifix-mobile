@@ -7,7 +7,7 @@ import { login } from '../../services/api'
 import { useNavigate } from "react-router-native";
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { COMETCHAT_CONSTANTS } from '../Chat/CONSTS';
+import { COMETCHAT_CONSTANTS } from '../CometChat/CONSTS';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../redux-store/actions/cometChatActions';
 import * as dashboardActions from '../../redux-store/actions/dashboardActions';

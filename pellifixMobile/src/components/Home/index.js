@@ -9,7 +9,7 @@ import {
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import { useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
-import CometChatUserListWithMessages from '../Chat/Users/CometChatUserListWithMessages';
+import CometChatUserListWithMessages from '../CometChat/Users/CometChatUserListWithMessages';
 import * as dashboardActions from '../../redux-store/actions/dashboardActions';
 import { addToWishList } from '../../services/api';
 import Toast from 'react-native-toast-message';

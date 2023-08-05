@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import moment from 'moment';
 import { useNavigate, useLocation } from 'react-router-native';
-import * as enums from '../Chat/utils/enums';
+import * as enums from '../CometChat/utils/enums';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 
 const ViewProfile = (props) => {

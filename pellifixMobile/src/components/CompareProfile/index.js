@@ -117,14 +117,6 @@ const CompareProfiles = () => {
                     <Text style={styles.Value}>{moment(data.dob).format('yyyy-MM-DD')}</Text>
                 </View>
                 <View>
-                    <Text style={styles.Key}>Physical Status</Text>
-                    <Text style={styles.Value}>{data.physical_status ? data.physical_status : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Body Type</Text>
-                    <Text style={styles.Value}>{data.body_type ? data.body_type : '-'}</Text>
-                </View>
-                <View>
                     <Text style={styles.Key}>Weight</Text>
                     <Text style={styles.Value}>{data.weight ? `${data.weight}Kgs` : '-'}</Text>
                 </View>
@@ -139,18 +131,6 @@ const CompareProfiles = () => {
                 <View>
                     <Text style={styles.Key}>Marital Status</Text>
                     <Text style={styles.Value}>{data.marital_status ? data.marital_status : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Eating Habits</Text>
-                    <Text style={styles.Value}>{data.eating_habit ? data.eating_habit : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Smoking Habit</Text>
-                    <Text style={styles.Value}>{data.smoking_habit ? data.smoking_habit : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Drinking Habits</Text>
-                    <Text style={styles.Value}>{data.drinking_habit ? data.drinking_habit : '-'}</Text>
                 </View>
                 <View>
                     <Text style={styles.Key}>Caste</Text>
@@ -208,46 +188,7 @@ const CompareProfiles = () => {
                     <Text style={styles.Key}>Annual Income</Text>
                     <Text style={styles.Value}>{data.salary ? data.salary : '-'}</Text>
                 </View>
-                <View>
-                    <Text style={styles.Key}>Family Type</Text>
-                    <Text style={styles.Value}>{data.family_type ? data.family_type : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Family Status In</Text>
-                    <Text style={styles.Value}>{data.family_status ? data.family_status : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Fathers Occupation</Text>
-                    <Text style={styles.Value}>{data.fathers_occupation ? data.fathers_occupation : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Mothers Occupation </Text>
-                    <Text style={styles.Value}>{data.mothers_occupation ? data.mothers_occupation : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>No of brothers</Text>
-                    <Text style={styles.Value}>{data.no_of_brothers ? data.no_of_brothers : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>No of brothers married </Text>
-                    <Text style={styles.Value}>{data.no_of_brothers_married ? data.no_of_brothers_married : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>No of sisters</Text>
-                    <Text style={styles.Value}>{data.no_of_sisters ? data.no_of_sisters : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>No of sisters married </Text>
-                    <Text style={styles.Value}>{data.no_of_sisters_married ? data.no_of_brothers_married : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Hobbies</Text>
-                    <Text style={styles.Value}>{data.hobbies ? data.hobbies : '-'}</Text>
-                </View>
-                <View>
-                    <Text style={styles.Key}>Intrests</Text>
-                    <Text style={styles.Value}>{data.interests ? data.interests : '-'}</Text>
-                </View>
+
             </View>
         )
     }

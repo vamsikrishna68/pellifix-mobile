@@ -14,7 +14,7 @@ import { store, persistor } from './src/redux-store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { CometChat } from '@cometchat-pro/react-native-chat';
-import { COMETCHAT_CONSTANTS } from './src/components/Chat/CONSTS';
+import { COMETCHAT_CONSTANTS } from './src/components/CometChat/CONSTS';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const theme = {
@@ -27,7 +27,7 @@ const theme = {
   },
 };
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CometChatContextProvider } from './src/components/Chat/utils/CometChatContext';
+import { CometChatContextProvider } from './src/components/CometChat/utils/CometChatContext';
 
 const App = () => {
   const [loginData, setLoginData] = useState();

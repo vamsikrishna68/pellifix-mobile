@@ -48,6 +48,7 @@ const Layout = () => {
     },
   });
 
+
   const handleLogout = () => {
     navigate('/login');
     AsyncStorage.removeItem('@storage_Key');

@@ -10,10 +10,10 @@ import Profile from '../components/Profile';
 import EditPreference from '../components/EditPreference';
 import ViewProfile from '../components/ViewProfile';
 import Subscription from '../components/Subscription';
-import Chat from '../components/Chat/index1';
+import Chat from '../components/Chat';
 import CompareProfile from '../components/CompareProfile';
 import WishList from '../components/WishList';
-import { CometChatMessages } from '../components/Chat';
+import { CometChatMessages } from '../components/CometChat';
 
 const AppRoutes = (props) => {
   return <NativeRouter>
