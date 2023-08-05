@@ -170,7 +170,7 @@ const Home = () => {
 
                   <Card.Cover
                     style={{ width: width, height: 300 }}
-                    source={{ uri: item.image }}
+                    source={item.image?{ uri: item.image }:require('../../assets/img/profiles/default.jpeg')}
                     alt='img'
                   />
                   <Card.Content style={{ width: width - 20 }}>
@@ -215,7 +215,7 @@ const Home = () => {
 
                 <Card.Cover
                   style={{ width: width, height: 300 }}
-                  source={{ uri: item.image }}
+                  source={item.image ? { uri: item.image } : require('../../assets/img/profiles/default.jpeg')}
                   alt='img'
 
                 />

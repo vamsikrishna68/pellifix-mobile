@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiService } from '.';
 
 axios.defaults.baseURL = 'https://api.pellifix.com/v1';
+export const REACT_APP_RAZORPAY_KEY = "rzp_test_So5j8pzHCy0Y2d";
 
 export const login = (email, password) => {
   return axios.post('/customer/login', {
@@ -112,3 +113,61 @@ export const addToWishList = (payload) => {
     body: payload,
   });
 };
+
+export const getSubscriptionPrices = () => {
+  return apiService({
+    url: '/profiles/subscription-prices',
+    method: 'GET'
+  })
+}
+
+export const getPriceDetailAPI = (payload) => {
+  return apiService({
+    url: `/subscription-prices/${payload.id}`,
+    method: 'GET'
+  })
+}
+
+export const updatePrice = (payload) => {
+  return apiService({
+    url: `/profiles/subscription-prices/${payload.id}`,
+    method: "PATCH",
+    body: payload,
+  });
+};
+
+export const deletePrice = (payload) => {
+  return apiService({
+    url: `/profiles/subscription-prices/${payload.id}`,
+    method: "DELETE",
+    body: payload,
+  });
+};
+
+
+// Razorpay
+export const fetchRazorPay = (payload) => {
+  return apiService({
+    url: "/razor/payment",
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const completeRazorPay = (payload) => {
+  return apiService({
+    url: "/razor/payment/complete",
+    method: "POST",
+    body: payload,
+  });
+};
+
+// Payment history
+export const getPaymentHistory = () => {
+  return apiService({
+    url: "/razor/payment",
+    method: "GET",
+  });
+};
+
+
