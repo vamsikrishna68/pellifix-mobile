@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -142,6 +142,11 @@ const Register = () => {
                       <Text style={styles.Title} variant="displaySmall">
                         Pellifix
                       </Text>
+                       {/* <Image
+                        style={{ width: 200, height: 80, marginBottom: 10 }}
+                        source={require('../../assets/logo.png')}
+                        alt='img'
+                      /> */}
                       <Text variant="titleMedium" style={styles.Subtitle}>
                         Signup for new Account
                       </Text>
@@ -293,10 +298,14 @@ const Register = () => {
                 }) => (
                   <View>
                     <View style={styles.CardTitles}>
-                      <Text style={styles.Title} variant="displaySmall">
+                      {/* <Text style={styles.Title} variant="displaySmall">
                         Pellifix
-                      </Text>
-
+                      </Text> */}
+                      <Image
+                        style={{ width: 200, height: 80, marginBottom: 10 }}
+                        source={require('../../assets/logo.png')}
+                        alt='img'
+                      />
                       <Text variant="titleMedium">
                         An 6 digit OTP has sent to your +91 {formData.mobileno}{' '}
                         mobile number, please enter below

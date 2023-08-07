@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-toast-message';
-import Logo from "../../assets/logo.jpg";
+import Logo from "../../assets/logo1.jpg";
 import { REACT_APP_RAZORPAY_KEY } from '../../services/api';
 import {
     Tabs,

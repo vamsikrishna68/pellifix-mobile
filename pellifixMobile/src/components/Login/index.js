@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native'
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper'
 import { Formik } from 'formik';
 import * as yup from 'yup'
@@ -36,7 +36,7 @@ const Login = () => {
         },
         Title: {
             color: '#d53833',
-            marginBottom: 30
+            marginBottom: 30,
         },
         Card: {
             width: Dimensions.get("window").width - 50,
@@ -47,11 +47,12 @@ const Login = () => {
             width: '100%',
         },
         Input: {
-            marginBottom: 20,
+            marginBottom: 10,
             textAlign: 'auto'
         },
         Input2: {
-            marginBottom: 10
+            marginBottom: 10,
+            marginTop:10
         },
         Submit: {
             marginTop: 30,
@@ -84,8 +85,8 @@ const Login = () => {
                 <Card.Content style={styles.CardInner}>
                     <Formik
                         validationSchema={loginValidationSchema}
-                        initialValues={{ email: 'senthamizh6991@gmail.com', password: '123456' }}
-                        // initialValues={{ email: '', password: '' }}
+                        // initialValues={{ email: 'senthamizh6991@gmail.com', password: '123456' }}
+                        initialValues={{ email: '', password: '' }}
 
                         onSubmit={values => {
                             login(values.email, values.password).then(async res => {
@@ -94,7 +95,7 @@ const Login = () => {
                                     await dispatch(
                                         actions.auth(res.data.profile_id, COMETCHAT_CONSTANTS.AUTH_KEY, false),
                                     );
-                                   
+
                                     let userData = JSON.stringify(res.data)
                                     await AsyncStorage.setItem('@storage_Key', userData);
                                     Toast.show({
@@ -123,6 +124,11 @@ const Login = () => {
                         <>
                             <View style={styles.CardTitles}>
                                 <Text style={styles.Title} variant="displaySmall">Pellifix</Text>
+                                {/* <Image
+                                    style={{ width: 200, height: 80, marginBottom:10 }}
+                                    source={require('../../assets/logo.png')}
+                                    alt='img'
+                                />                                 */}
                                 <Text variant='titleMedium' style={styles.Subtitle}>Sign into your Account</Text>
 
                             </View>
@@ -156,9 +162,11 @@ const Login = () => {
                                 <Text style={styles.Error}>{errors.password}</Text>
                             }
                             <Paragraph onPress={() => navigate('/forgot-password')}>Forgot Password?</Paragraph>
-                            <Button style={styles.Submit} mode="contained" onPress={handleSubmit}>
+                            <TouchableOpacity onPress={handleSubmit}>
+                            <Button style={styles.Submit} mode="contained" >
                                 Login
                             </Button>
+                            </TouchableOpacity>
                             <View style={styles.CardTitles}>
                                 <Text>Don't have Account? <Text onPress={() => navigate('/register')} style={styles.Underline}>Register</Text></Text>
                             </View>
