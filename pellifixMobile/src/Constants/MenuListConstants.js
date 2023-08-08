@@ -31,7 +31,7 @@ export const routes = [
     },
     {
       title: 'Profile Viewed',
-      route: '/auth/view-profile',
+      route: '/auth/viewed-profiles',
       icon: 'account-eye-outline',
     },
     {

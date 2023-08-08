@@ -31,6 +31,9 @@ import SwiperFlatList from 'react-native-swiper-flatlist';
 import {
   Paragraph,
 } from 'react-native-paper';
+import { addToWishList } from '../../../../services/api';
+import ToastMessage from '../../../common/Toast';
+
 class CometChatUserList extends React.PureComponent {
   static contextType = CometChatContext;
 
@@ -278,10 +281,17 @@ class CometChatUserList extends React.PureComponent {
     );
   };
 
-  handleFavourite = async (index) => {
-    let usersInfo = [...this.state.userList];
-    usersInfo[index]['isFavourite'] = !usersInfo[index]['isFavourite'];
-    await this.setState({ userList: usersInfo });
+  handleFavourite = async (user) => {
+    setIsLoading(true);
+    const payload = {
+      is_liked: !user['is_liked'],
+      short_id: parseInt(user['id']),
+    };
+    const response = await addToWishList(payload);
+    if (response && response.data && response.data.message) {
+      await getDashboardData();
+      ToastMessage('success', response.data.message)
+    }
   }
   /**
    * Return component for empty user list
@@ -396,21 +406,28 @@ class CometChatUserList extends React.PureComponent {
     if (userList.length) {
       headerIndices = [];
       userList.forEach((user) => {
-        const chr = user.name[0].toUpperCase();
-        if (chr !== this.currentLetter) {
-          this.currentLetter = chr;
-          if (!this.state.textInputValue && this.props.chatType) {
-            headerIndices.push(userListWithHeaders.length);
-            userListWithHeaders.push({
-              value: this.currentLetter,
-              header: true,
-            });
+        let index = this.props.dailyRecommendations ? this.props.dailyRecommendations.findIndex((item) => item.profile_id == user.uid)
+          : 0;
+        if (index != -1) {
+          const chr = user.name[0].toUpperCase();
+          if (this.props.dailyRecommendations && this.props.dailyRecommendations[index]) {
+            user['id'] = this.props.dailyRecommendations[index]['id'];
+            user['is_liked'] = this.props.dailyRecommendations[index]['is_liked'];
           }
-          userListWithHeaders.push({ value: user, header: false });
-        } else {
-          userListWithHeaders.push({ value: user, header: false });
+          if (chr !== this.currentLetter) {
+            this.currentLetter = chr;
+            if (!this.state.textInputValue && this.props.chatType) {
+              headerIndices.push(userListWithHeaders.length);
+              userListWithHeaders.push({
+                value: this.currentLetter,
+                header: true,
+              });
+            }
+            userListWithHeaders.push({ value: user, header: false });
+          } else {
+            userListWithHeaders.push({ value: user, header: false });
+          }
         }
-
       });
     }
 

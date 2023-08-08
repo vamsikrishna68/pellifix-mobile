@@ -26,9 +26,6 @@ import {
   Platform,
   Image,
   TouchableOpacity,
-  Alert,
-  ToastAndroid,
-  Vibration
 } from 'react-native';
 import { logger } from '../../utils/common';
 import { SwipeListView } from 'react-native-swipe-list-view';

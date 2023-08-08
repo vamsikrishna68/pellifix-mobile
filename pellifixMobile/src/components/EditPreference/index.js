@@ -37,11 +37,13 @@ import {
   SMOKING_HABITS,
   STATE,
 } from '../../Constants/constants';
+import ToastMessage from '../common/Toast';
+
 const EditPreference = () => {
-  let navigate = useNavigate();
   const [age, setAge] = useState([18, 60]);
   const [height, setHeight] = useState([40, 80]);
   let districts = {};
+  
   useEffect(() => {
     DISTRICT.forEach(
       item =>
@@ -293,23 +295,12 @@ const EditPreference = () => {
                   async res => {
                     console.log(res, 'res');
                     if (res.data) {
-                      toast.success('Registration successfully completed!', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        theme: 'colored',
-                        // transition: Zoom,
-                      });
-                      // navigate('/login');
+                      ToastMessage('success','Profile Updated Successfully!')
                     }
                   },
                   err => {
                     console.log(err, 'err');
-                    Toast.show({
-                      type: 'error',
-                      position: 'bottom',
-                      bottomOffset: 170,
-                      text1: 'Try Again!',
-                    });
+                    ToastMessage('error','Try Again!')
                   },
                 );
               }}>

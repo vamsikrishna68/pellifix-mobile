@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions,TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { forgotPasswordRequest } from '../../services/api';
 import { useNavigate } from 'react-router-native';
-import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ToastMessage from '../common/Toast';
 
 const ForgotPassword = () => {
   let navigate = useNavigate();
@@ -108,23 +108,13 @@ const ForgotPassword = () => {
                   async res => {
                     console.log(res, 'res');
                     if (res.data) {
-                      Toast.show({
-                        type: 'success',
-                        position: 'bottom',
-                        bottomOffset: 170,
-                        text1: 'Authentication Successfull!',
-                      });
+                      ToastMessage('success', 'Authentication Successfull!');
                       navigate('/');
                     }
                   },
                   err => {
                     console.log(err, 'err');
-                    Toast.show({
-                      type: 'error',
-                      position: 'bottom',
-                      bottomOffset: 170,
-                      text1: 'Something went wrong',
-                    });
+                    ToastMessage('error', 'Something went wrong');
                   },
                 );
               }}>

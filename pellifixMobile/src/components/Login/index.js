@@ -5,12 +5,12 @@ import { Formik } from 'formik';
 import * as yup from 'yup'
 import { login } from '../../services/api'
 import { useNavigate } from "react-router-native";
-import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COMETCHAT_CONSTANTS } from '../CometChat/CONSTS';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../redux-store/actions/cometChatActions';
 import * as dashboardActions from '../../redux-store/actions/dashboardActions';
+import ToastMessage from '../common/Toast';
 
 const Login = () => {
     let navigate = useNavigate();
@@ -52,7 +52,7 @@ const Login = () => {
         },
         Input2: {
             marginBottom: 10,
-            marginTop:10
+            marginTop: 10
         },
         Submit: {
             marginTop: 30,
@@ -85,8 +85,8 @@ const Login = () => {
                 <Card.Content style={styles.CardInner}>
                     <Formik
                         validationSchema={loginValidationSchema}
-                        // initialValues={{ email: 'senthamizh6991@gmail.com', password: '123456' }}
-                        initialValues={{ email: '', password: '' }}
+                        initialValues={{ email: 'asaipriyan@gmail.com', password: 'Loopy@123$' }}
+                        // initialValues={{ email: '', password: '' }}
 
                         onSubmit={values => {
                             login(values.email, values.password).then(async res => {
@@ -98,24 +98,14 @@ const Login = () => {
 
                                     let userData = JSON.stringify(res.data)
                                     await AsyncStorage.setItem('@storage_Key', userData);
-                                    Toast.show({
-                                        type: 'success',
-                                        position: 'bottom',
-                                        bottomOffset: 170,
-                                        text1: 'Authentication Successfull!',
-                                    });
+                                    ToastMessage('success', 'Authentication Successfull!');
                                     setTimeout(() => {
                                         navigate('/auth/home')
                                     }, 2000)
                                 }
                             }, err => {
                                 console.log(err, "err")
-                                Toast.show({
-                                    type: 'error',
-                                    position: 'bottom',
-                                    bottomOffset: 170,
-                                    text1: 'UserId or Password is wrong!',
-                                });
+                                ToastMessage('error', 'UserId or Password is wrong!');
                             })
 
                         }}
@@ -163,9 +153,9 @@ const Login = () => {
                             }
                             <Paragraph onPress={() => navigate('/forgot-password')}>Forgot Password?</Paragraph>
                             <TouchableOpacity onPress={handleSubmit}>
-                            <Button style={styles.Submit} mode="contained" >
-                                Login
-                            </Button>
+                                <Button style={styles.Submit} mode="contained" >
+                                    Login
+                                </Button>
                             </TouchableOpacity>
                             <View style={styles.CardTitles}>
                                 <Text>Don't have Account? <Text onPress={() => navigate('/register')} style={styles.Underline}>Register</Text></Text>

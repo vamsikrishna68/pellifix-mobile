@@ -29,10 +29,16 @@ export const authFail = (error) => {
     };
 };
 
-export const fetchDailyProfiles = async () => {
-    const response = await getProfiles('daily');
-    if (response) {
-        store.dispatch(getDailyRecommendations(response.data.data))
+export const fetchDailyProfiles = (type) => {
+    return async (dispatch) => {
+        const response = await getProfiles(type);
+        if (response) {
+            if (response && response.data && response.data.data) {
+                dispatch(getDailyRecommendations(response.data.data))
+            } else {
+                dispatch(authFail(response.code))
+            }
+        }
     }
 };
 
@@ -47,7 +53,7 @@ export const fetchHoroscopicProfiles = (type) => {
     }
 };
 
-export const fetchPreferenceProfiles =  (type) => {
+export const fetchPreferenceProfiles = (type) => {
     return async (dispatch) => {
         const response = await getProfiles(type);
         if (response && response.data && response.data.data) {

@@ -4,16 +4,11 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
-    TouchableOpacity,
     FlatList,
 } from 'react-native';
 import { Card, Text, RadioButton, Button, Paragraph, IconButton } from 'react-native-paper';
-import { useNavigate } from 'react-router-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Image } from 'react-native';
-import { useSelector } from 'react-redux';
 import { addToWishList, getWishListData } from '../../services/api';
-import Toast from 'react-native-toast-message';
+import ToastMessage from '../common/Toast';
 
 const WishList = () => {
 
@@ -37,12 +32,7 @@ const WishList = () => {
         };
         const response = await addToWishList(payload);
         if (response && response.data.message) {
-            Toast.show({
-                type: 'success',
-                position: 'bottom',
-                bottomOffset: 170,
-                text1: response.data.message,
-            });
+            ToastMessage('success', response.data.message);
         }
         await getWishlist();
     }
@@ -67,7 +57,7 @@ const WishList = () => {
             flex: 1,
             justifyContent: 'center',
             marginBottom: 100,
-            alignItems:'center'
+            alignItems: 'center'
         }}>
             <FlatList
                 data={wishList}

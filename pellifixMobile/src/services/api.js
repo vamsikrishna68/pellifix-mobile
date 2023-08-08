@@ -55,6 +55,13 @@ export const getProfiles = (type) => {
   })
 }
 
+export const getSelectedProfileData = (id) => {
+  return apiService({
+    url: `/profiles/details/${id}`,
+    method: 'GET'
+  })
+}
+
 export const fetchProfileData = () => {
   return apiService({
     url: `/profiles`,
@@ -63,6 +70,7 @@ export const fetchProfileData = () => {
 }
 
 export const updateProfileData = (payload) => {
+  console.log(payload)
   return apiService({
     url: `/profiles`,
     method: 'PATCH',
@@ -167,6 +175,21 @@ export const getPaymentHistory = () => {
   return apiService({
     url: "/razor/payment",
     method: "GET",
+  });
+};
+
+export const getViewedProfile = () => {
+  return apiService({
+    url: "/users/profile-views",
+    method: "GET",
+  });
+};
+
+export const updateViewedProfile = (payload) => {
+  return apiService({
+    url: "/users/profile-views",
+    method: "POST",
+    body: payload,
   });
 };
 

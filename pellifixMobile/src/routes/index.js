@@ -8,12 +8,13 @@ import ForgotPassword from '../components/ForgotPassword'
 import Layout from '../components/Layout';
 import Profile from '../components/Profile';
 import EditPreference from '../components/EditPreference';
-import ViewProfile from '../components/ViewProfile';
 import Subscription from '../components/Subscription';
 import Chat from '../components/Chat';
 import CompareProfile from '../components/CompareProfile';
 import WishList from '../components/WishList';
 import { CometChatMessages } from '../components/CometChat';
+import ViewSelectedProfile from '../components/ViewSelectedProfile';
+import ViewedProfiles from '../components/ViewedProfiles';
 
 const AppRoutes = (props) => {
   return <NativeRouter>
@@ -28,7 +29,8 @@ const AppRoutes = (props) => {
         <Route exact path="home" element={<Home />} />
         <Route exact path="profile" element={<Profile />} />
         <Route exact path="edit-preference" element={<EditPreference />} />
-        <Route exact path='view-profile' element={<ViewProfile />} />
+        <Route exact path='view-selected-profile' element={<ViewSelectedProfile />} />
+        <Route exact path='viewed-profiles' element={<ViewedProfiles />} />
         <Route exact path="subscription" element={<Subscription />} />
         <Route exact path="chat" element={<Chat />} />
         <Route exact path="wish-list" element={<WishList />} />

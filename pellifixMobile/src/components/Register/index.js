@@ -5,10 +5,10 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { register, submitOtp, resendOtp } from '../../services/api';
 import { useNavigate } from 'react-router-native';
-import Toast from 'react-native-toast-message';
 import SelectList from 'react-native-dropdown-select-list';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ToastMessage from '../common/Toast';
 
 const Register = () => {
   let navigate = useNavigate();
@@ -33,22 +33,12 @@ const Register = () => {
     resendOtp(payload).then(
       async res => {
         if (res) {
-          Toast.show({
-            type: 'success',
-            position: 'bottom',
-            bottomOffset: 170,
-            text1: 'OTP has been sent to your mobile number.'
-          });
+          ToastMessage('success', 'OTP has been sent to your mobile number.')
         }
       },
       err => {
         console.log(err, 'err');
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          bottomOffset: 170,
-          text1: 'Try Again!',
-        });
+        ToastMessage('error', err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!')
       },
     );
   }
@@ -109,25 +99,15 @@ const Register = () => {
                       console.log(res, 'res');
                       if (res.data) {
                         setFormData(payload);
-                        Toast.show({
-                          type: 'success',
-                          position: 'bottom',
-                          bottomOffset: 170,
-                          text1: 'OTP has been sent to your mobile number.',
-                        });
+                        ToastMessage('success', 'OTP has been sent to your mobile number.');
                         setSendOtp(true);
                       }
                     },
                     err => {
                       console.log(err.response, 'err');
-                      Toast.show({
-                        type: 'error',
-                        position: 'bottom',
-                        bottomOffset: 170,
-                        text1: err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!',
-                      });
+                      ToastMessage('error', err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!')
                     },
-                  );
+                  )
                 }}>
                 {({
                   values,
@@ -142,7 +122,7 @@ const Register = () => {
                       <Text style={styles.Title} variant="displaySmall">
                         Pellifix
                       </Text>
-                       {/* <Image
+                      {/* <Image
                         style={{ width: 200, height: 80, marginBottom: 10 }}
                         source={require('../../assets/logo.png')}
                         alt='img'
@@ -267,24 +247,13 @@ const Register = () => {
                   submitOtp(payload).then(
                     async res => {
                       if (res) {
-                        Toast.show({
-                          position: 'bottom',
-                          autoClose: 4000,
-                          type: 'success',
-                          bottomOffset: 170,
-                          text1: 'Registration successfully completed!'
-                        });
+                        ToastMessage('success', 'Registration successfully completed!');
                         navigate('/login');
                       }
                     },
                     err => {
                       console.log(err, 'err');
-                      Toast.show({
-                        type: 'error',
-                        position: 'bottom',
-                        bottomOffset: 170,
-                        text1: 'Try Again!',
-                      });
+                      ToastMessage('error', 'Try Again!');
                     },
                   );
                 }}>

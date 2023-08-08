@@ -51,9 +51,9 @@ const CometChatUserListItem = (props) => {
           right={iconprops => (
             <IconButton
               {...iconprops}
-              icon={props.user && props.user.isFavourite ? 'cards-heart' : "heart-outline"}
-              onPress={() => props.handleFavourite(props.index)}
-              iconColor={props.user && props.user.isFavourite ? 'red' : 'gray'}
+              icon={props.user && props.user.is_liked ? 'cards-heart' : "heart-outline"}
+              onPress={() => props.handleFavourite(props.user)}
+              iconColor={props.user && props.user.is_liked ? 'red' : 'gray'}
             />
           )}
         />

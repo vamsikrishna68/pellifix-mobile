@@ -12,14 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import CometChatUserListWithMessages from '../CometChat/Users/CometChatUserListWithMessages';
 import * as dashboardActions from '../../redux-store/actions/dashboardActions';
 import { addToWishList } from '../../services/api';
-import Toast from 'react-native-toast-message';
+import ToastMessage from '../common/Toast';
 
 const Home = () => {
   const navigate = useNavigate();
   const width = Dimensions.get('window').width;
   const dispatch = useDispatch();
   const dashboardInfo = {
-    dailyRecommendation: useSelector(state => state.dashboardReducer.dailyRecommendations),
+    dailyRecommendations: useSelector(state => state.dashboardReducer.dailyRecommendations),
     horoscopeMatches: useSelector(state => state.dashboardReducer.horoscopicMatches),
     preferenceMatches: useSelector(state => state.dashboardReducer.preferenceMatches)
   };
@@ -34,8 +34,10 @@ const Home = () => {
 
   const getDashboardData = () => {
     setTimeout(async () => {
+      await dispatch(dashboardActions.fetchDailyProfiles('daily'));
       await dispatch(dashboardActions.fetchHoroscopicProfiles('horoscopic'));
       await dispatch(dashboardActions.fetchPreferenceProfiles('preference'));
+
       setIsLoading(false);
 
     }, 3000);
@@ -76,12 +78,7 @@ const Home = () => {
     const response = await addToWishList(payload);
     if (response && response.data && response.data.message) {
       await getDashboardData();
-      Toast.show({
-        type: 'success',
-        position: 'bottom',
-        bottomOffset: 170,
-        text1: response.data.message,
-      });
+      ToastMessage('success',response.data.message);
     }
   }
 
@@ -100,7 +97,8 @@ const Home = () => {
         <Text style={{ marginVertical: 15 }} variant="titleLarge">
           Daily Recommendations
         </Text>
-        <CometChatUserListWithMessages navigate={navigate} handleFavourite={handleFavourite} />
+        <CometChatUserListWithMessages navigate={navigate} handleFavourite={handleFavourite}
+          dailyRecommendations={dashboardInfo && dashboardInfo.dailyRecommendations} />
 
         {/* {dailyRecommendation && dailyRecommendation.length && dailyRecommendation.length > 0 ? (
         <View style={{ height: 500 }}>
@@ -170,7 +168,7 @@ const Home = () => {
 
                   <Card.Cover
                     style={{ width: width, height: 300 }}
-                    source={item.image?{ uri: item.image }:require('../../assets/img/profiles/default.jpeg')}
+                    source={item.image ? { uri: item.image } : require('../../assets/img/profiles/default.jpeg')}
                     alt='img'
                   />
                   <Card.Content style={{ width: width - 20 }}>

@@ -18,7 +18,6 @@ import { fetchRazorPay, fetchProfileData, getSubscriptionPrices, patchEditPrefer
 import { useNavigate } from 'react-router-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RazorpayCheckout from 'react-native-razorpay';
-import Toast from 'react-native-toast-message';
 import Logo from "../../assets/logo1.jpg";
 import { REACT_APP_RAZORPAY_KEY } from '../../services/api';
 import {
@@ -28,6 +27,7 @@ import {
     useTabNavigation,
 } from 'react-native-paper-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastMessage from '../common/Toast';
 
 const Subscription = () => {
     let navigate = useNavigate();
@@ -108,14 +108,7 @@ const Subscription = () => {
     };
 
     const showError = (message1, message2 = null) => {
-        Toast.show({
-            type: 'error',
-            position: 'bottom',
-            bottomOffset: 170,
-            text1: message1,
-            text2: message2,
-            visibilityTime: 10000
-        });
+        ToastMessage('error', message1, message2);
     };
 
 
@@ -164,14 +157,7 @@ const Subscription = () => {
         RazorpayCheckout.open(options)
             .then(data => {
                 // handle success
-                Toast.show({
-                    type: 'success',
-                    position: 'bottom',
-                    bottomOffset: 170,
-                    text1: `Payment Successful: `,
-                    text2: `Order ID - ${data.razorpay_payment_id}`,
-                    visibilityTime: 10000
-                });
+                ToastMessage('success', `Payment Successful: `, `Order ID - ${data.razorpay_payment_id}`)
             })
             .catch(errorRes => {
                 if (Platform.OS == 'ios') {

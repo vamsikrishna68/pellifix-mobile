@@ -4,13 +4,14 @@ import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import SelectList from 'react-native-dropdown-select-list';
 import * as yup from 'yup';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Toast from 'react-native-toast-message';
+import { Dropdown } from 'react-native-element-dropdown';
+
 import {
   getDropdownValues,
   fetchProfileData,
   updateProfileData,
 } from '../../services/api';
+import ToastMessage from '../common/Toast';
 
 const Profile = () => {
   const [dropDownValues, setDropdownValues] = useState({});
@@ -19,12 +20,15 @@ const Profile = () => {
   const [show, setShow] = useState(true);
   const height = Dimensions.get('window').height;
   const [profileData, setProfileData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [savedDropdownValues, setSavedDropdownValues] = useState();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
   };
+
   const showMode = currentMode => {
     if (Platform.OS === 'android') {
       setShow(false);
@@ -42,10 +46,14 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchDropdownValues();
-    getProfileData();
+    getValues();
   }, []);
 
+  const getValues = async () => {
+    await fetchDropdownValues();
+    await getProfileData();
+
+  }
   const fetchDropdownValues = async () => {
     const response = await getDropdownValues();
     if (response) {
@@ -54,15 +62,15 @@ const Profile = () => {
   };
   const formatDropdownValues = array => {
     return array.map(e => ({
-      key: e.id,
-      value: e.name,
+      label: e.name,
+      value: e.id.toString(),
     }));
   };
 
   const getProfileData = async () => {
     try {
       const response = await fetchProfileData();
-      if (response) {
+      if (response && response.data) {
         setProfileData(response.data);
       }
     } catch (error) { }
@@ -100,13 +108,84 @@ const Profile = () => {
       fontSize: 10,
       color: 'red',
     },
+    container: {
+      backgroundColor: 'white',
+      paddingVertical: 16,
+    },
+    dropdown: {
+      height: 47,
+      borderColor: 'black',
+      borderWidth: 0.5,
+      borderRadius: 5,
+      paddingHorizontal: 8,
+    },
+    icon: {
+      marginRight: 5,
+    },
+    label: {
+      position: 'absolute',
+      backgroundColor: 'white',
+      left: 9,
+      top: 8,
+      zIndex: 999,
+      paddingHorizontal: 8,
+      fontSize: 12,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
   });
+
+  const renderDropdown = (type, name, values, placeholder) => {
+    const renderLabel = () => {
+      if (savedDropdownValues && savedDropdownValues[name] ? savedDropdownValues[name] : values[name]) {
+        return (
+          <Text style={[styles.label]}>
+            {placeholder}
+          </Text>
+        );
+      }
+      return null;
+    };
+    return (
+      <View style={styles.container}>
+        {renderLabel()}
+        <Dropdown
+          style={[styles.dropdown]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          iconStyle={styles.iconStyle}
+          data={dropDownValues[type]
+            ? formatDropdownValues(dropDownValues?.[type])
+            : []}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={`Select ${placeholder}`}
+          value={savedDropdownValues && savedDropdownValues[name] ? savedDropdownValues[name] : values[name]}
+          onChange={(item) => handleDropdown(name, item.value)}
+        />
+      </View>
+    )
+  }
+
+  const handleDropdown = (name, value) => {
+    setSavedDropdownValues({ ...savedDropdownValues, [name]: value })
+  }
 
   return (
     <View style={styles.Container}>
       {profileData ? (
         <Formik
           // validationSchema={validationSchema}
+          enableReinitialize
           initialValues={profileData}
           onSubmit={values => {
             const data = { ...values };
@@ -115,7 +194,7 @@ const Profile = () => {
                 data[e] = "";
               }
             });
-            let payload = { ...formData, ...data };
+            let payload = { ...data };
             payload.height = payload.height ? parseFloat(payload.height) : 0;
             payload.weight = payload.weight ? parseFloat(payload.weight) : 0;
             payload.no_of_sisters_married = parseFloat(
@@ -134,30 +213,29 @@ const Profile = () => {
             payload.no_of_sisters = parseFloat(
               payload.no_of_sisters ? payload.no_of_sisters : 0
             );
-            payload.gender = payload.gender.toString();
-            payload.body_type = payload.body_type.toString();
-            payload.caste = payload.caste.toString();
-            payload.citizen = payload.citizen.toString();
-            payload.country = payload.country.toString();
-            payload.drinking_habit = payload.drinking_habit.toString();
-            payload.eating_habit = payload.eating_habit.toString();
-            payload.education = payload.education.toString();
-            payload.family_status = payload.family_status.toString();
-            payload.family_type = payload.family_type.toString();
-            payload.marital_status = payload.marital_status.toString();
-            payload.mother_tongue = payload.mother_tongue.toString();
-            payload.occupation = payload.occupation.toString();
-            payload.physical_status = payload.physical_status.toString();
+            payload.gender = savedDropdownValues && savedDropdownValues.gender ? savedDropdownValues.gender.toString() : payload.gender.toString();
+            payload.body_type = savedDropdownValues && savedDropdownValues.body_type ? savedDropdownValues.body_type : payload.body_type.toString();
+            payload.caste = savedDropdownValues && savedDropdownValues.caste ? savedDropdownValues.caste : payload.caste.toString();
+            payload.citizen = savedDropdownValues && savedDropdownValues.citizen ? savedDropdownValues.citizen.toString() : payload.citizen.toString();
+            payload.country = savedDropdownValues && savedDropdownValues.country ? savedDropdownValues.country.toString() : payload.country.toString();
+            payload.drinking_habit = savedDropdownValues && savedDropdownValues.drinking_habit ? savedDropdownValues.drinking_habit.toString() : payload.drinking_habit.toString();
+            payload.eating_habit = savedDropdownValues && savedDropdownValues.eating_habit ? savedDropdownValues.eating_habit.toString() : payload.eating_habit.toString();
+            payload.education = savedDropdownValues && savedDropdownValues.education ? savedDropdownValues.education.toString() : payload.education.toString();
+            payload.family_status = savedDropdownValues && savedDropdownValues.family_status ? savedDropdownValues.family_status.toString() : payload.family_status.toString();
+            payload.family_type = savedDropdownValues && savedDropdownValues.family_type ? savedDropdownValues.family_type.toString() : payload.family_type.toString();
+            payload.marital_status = savedDropdownValues && savedDropdownValues.marital_status ? savedDropdownValues.marital_status.toString() : payload.marital_status.toString();
+            payload.mother_tongue = savedDropdownValues && savedDropdownValues.mother_tongue ? savedDropdownValues.mother_tongue.toString() : payload.mother_tongue.toString();
+            payload.occupation = savedDropdownValues && savedDropdownValues.occupation ? savedDropdownValues.occupation.toString() : payload.occupation.toString();
+            payload.physical_status = savedDropdownValues && savedDropdownValues.physical_status ? savedDropdownValues.physical_status.toString() : payload.physical_status.toString();
             payload.profession = payload.profession.toString();
             payload.profile_creater = payload.profile_creater.toString();
-            payload.religion = payload.religion.toString();
-            payload.salary = payload.salary.toString();
-            payload.smoking_habit = payload.smoking_habit.toString();
-            payload.star = payload.star.toString();
+            payload.religion = savedDropdownValues && savedDropdownValues.religion ? savedDropdownValues.religion.toString() : payload.religion.toString();
+            payload.salary = savedDropdownValues && savedDropdownValues.salary ? savedDropdownValues.salary.toString() : payload.salary.toString();
+            payload.smoking_habit = savedDropdownValues && savedDropdownValues.smoking_habit ? savedDropdownValues.smoking_habit.toString() : payload.smoking_habit.toString();
+            payload.star = savedDropdownValues && savedDropdownValues.star ? savedDropdownValues.star.toString() : payload.star.toString();
             payload.zodiac = payload.zodiac.toString();
-            payload.state = payload.state.toString();
-            payload.district = payload.district.toString();
-            payload.images = [];
+            payload.state = savedDropdownValues && savedDropdownValues.state ? savedDropdownValues.state.toString() : payload.state.toString();
+            payload.district = savedDropdownValues && savedDropdownValues.district ? savedDropdownValues.district.toString() : payload.district.toString();
 
             delete payload.id;
             delete payload.created_by;
@@ -169,19 +247,18 @@ const Profile = () => {
             delete payload.paid_date;
             delete payload.start_date;
             delete payload.end_date;
+            delete payload.images;
 
             updateProfileData(payload).then(
               res => {
                 if (res) {
-                  Toast.show({
-                    type: 'success',
-                    position: 'bottom',
-                    bottomOffset: 170,
-                    text1: 'Profile Updated',
-                  });
+                  console.log(res.code)
+                  ToastMessage('success', 'Profile Updated Successfully.');
+                  getProfileData();
                 }
               },
               err => {
+                console.log('err');
                 console.log(err);
               },
             );
@@ -192,7 +269,7 @@ const Profile = () => {
             touched,
             handleSubmit,
             handleBlur,
-            handleChange,
+            handleChange
           }) => (
             <>
               <ScrollView style={{ height: Platform.OS == 'ios' ? height - 220 : height - 180 }}>
@@ -216,19 +293,10 @@ const Profile = () => {
                   label="Surname"
                   mode="outlined"
                 />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Gender"
-                  searchPlaceholder="Search Gender"
-                  setSelected={handleChange('gender')}
-                  save={values.gender}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.GENDER
-                      ? formatDropdownValues(dropDownValues?.GENDER)
-                      : []
-                  }
-                />
+
+
+                {renderDropdown('GENDER', 'gender', values, 'Gender')}
+
                 <TextInput
                   value={values.dob}
                   style={styles.Input}
@@ -239,32 +307,12 @@ const Profile = () => {
                   label="Date of Birth"
                   mode="outlined"
                 />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Body Type"
-                  searchPlaceholder="Search Body Type"
-                  setSelected={handleChange('body_type')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues?.BODY_TYPES
-                      ? formatDropdownValues(dropDownValues?.BODY_TYPES)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Physical Status"
-                  searchPlaceholder="Search Physical Status"
-                  setSelected={handleChange('PHYSICAL_STATUS')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.PHYSICAL_STATUS
-                      ? formatDropdownValues(dropDownValues?.PHYSICAL_STATUS)
-                      : []
-                  }
-                />
+
+                {renderDropdown('BODY_TYPES', 'body_type', values, 'Body Type')}
+                {renderDropdown('PHYSICAL_STATUS', 'physical_status', values, 'Physical Status')}
+
                 <TextInput
-                  value={values.height}
+                  value={values.height.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -274,7 +322,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.weight}
+                  value={values.weight.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -283,102 +331,17 @@ const Profile = () => {
                   label="Weight"
                   mode="outlined"
                 />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Marital Status"
-                  searchPlaceholder="Search Marital Status"
-                  setSelected={handleChange('marital_status')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.MARITAL_STATUS
-                      ? formatDropdownValues(dropDownValues?.MARITAL_STATUS)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Mother Toungue"
-                  searchPlaceholder="Search Mother Toungue"
-                  setSelected={handleChange('mother_tongue')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.MOTHER_TOUNGE_LIST
-                      ? formatDropdownValues(dropDownValues?.MOTHER_TOUNGE_LIST)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Smoking Habit"
-                  searchPlaceholder="Search Smoking Habit"
-                  setSelected={handleChange('smoking_habit')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.SMOKING
-                      ? formatDropdownValues(dropDownValues?.SMOKING)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Eating Habit"
-                  searchPlaceholder="Search Eating Habit"
-                  setSelected={handleChange('eating_habit')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.FOOD
-                      ? formatDropdownValues(dropDownValues?.FOOD)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Drinking Habit"
-                  searchPlaceholder="Search Drinking Habit"
-                  setSelected={handleChange('drinking_habit')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.DRINKING
-                      ? formatDropdownValues(dropDownValues?.DRINKING)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Religion"
-                  searchPlaceholder="Search Religion"
-                  setSelected={handleChange('religion')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.RELIGION
-                      ? formatDropdownValues(dropDownValues?.RELIGION)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Caste"
-                  searchPlaceholder="Search Caste"
-                  setSelected={handleChange('caste')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.CASTE
-                      ? formatDropdownValues(dropDownValues?.CASTE)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Nakshtram"
-                  searchPlaceholder="Search Nakshtram"
-                  setSelected={handleChange('star')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.STAR_LIST
-                      ? formatDropdownValues(dropDownValues?.STAR_LIST)
-                      : []
-                  }
-                />
+
+                {renderDropdown('MARITAL_STATUS', 'marital_status', values, 'Marital Status')}
+                {renderDropdown('MOTHER_TOUNGE_LIST', 'mother_tongue', values, 'Mother Toungue')}
+                {renderDropdown('SMOKING', 'smoking_habit', values, 'Smoking Habit')}
+                {renderDropdown('FOOD', 'eating_habit', values, 'Eating Habit')}
+                {renderDropdown('DRINKING', 'drinking_habit', values, 'Drinking Habit')}
+
+                {renderDropdown('RELIGION', 'religion', values, 'Religion')}
+                {renderDropdown('CASTE', 'caste', values, 'Caste')}
+                {renderDropdown('STAR_LIST', 'star', values, 'Nakshtram')}
+
                 <TextInput
                   value={values.email}
                   style={styles.Input}
@@ -389,54 +352,11 @@ const Profile = () => {
                   label="Time of Birth"
                   mode="outlined"
                 />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Country"
-                  searchPlaceholder="Search Country"
-                  setSelected={handleChange('country')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.COUNTRYS
-                      ? formatDropdownValues(dropDownValues?.COUNTRYS)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Citizenship"
-                  searchPlaceholder="Search Citizenship"
-                  setSelected={handleChange('citizen')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.COUNTRYS
-                      ? formatDropdownValues(dropDownValues?.COUNTRYS)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select State"
-                  searchPlaceholder="Search State"
-                  setSelected={handleChange('state')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.STATES
-                      ? formatDropdownValues(dropDownValues?.STATES)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select District"
-                  searchPlaceholder="Search District"
-                  setSelected={handleChange('district')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.DISTRICTS
-                      ? formatDropdownValues(dropDownValues?.DISTRICTS)
-                      : []
-                  }
-                />
+
+                {renderDropdown('COUNTRYS', 'country', values, 'Country')}
+                {renderDropdown('COUNTRYS', 'citizen', values, 'Citizenship')}
+                {renderDropdown('STATES', 'state', values, 'State')}
+                {renderDropdown('DISTRICTS', 'district', values, 'District')}
 
                 <TextInput
                   value={values.city}
@@ -448,18 +368,9 @@ const Profile = () => {
                   label="Select Town/City"
                   mode="outlined"
                 />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Higher Qualification"
-                  searchPlaceholder="Search Higher Qualification"
-                  setSelected={handleChange('education')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.EDUCATION
-                      ? formatDropdownValues(dropDownValues?.EDUCATION)
-                      : []
-                  }
-                />
+
+                {renderDropdown('EDUCATION', 'education', values, 'Higher Qualification')}
+
                 <TextInput
                   value={values.employeed_in}
                   style={styles.Input}
@@ -471,54 +382,13 @@ const Profile = () => {
                   mode="outlined"
                 />
 
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Occupation"
-                  searchPlaceholder="Search Occupation"
-                  setSelected={handleChange('occupation')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.OCCUPATION
-                      ? formatDropdownValues(dropDownValues?.OCCUPATION)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Annual Income"
-                  searchPlaceholder="Search Annual Income"
-                  setSelected={handleChange('salary')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.SALARY
-                      ? formatDropdownValues(dropDownValues?.SALARY)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Family Type"
-                  searchPlaceholder="Search Family Type"
-                  setSelected={handleChange('family_type')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.FAMILY_TYPE
-                      ? formatDropdownValues(dropDownValues?.FAMILY_TYPE)
-                      : []
-                  }
-                />
-                <SelectList
-                  dropdownStyles={{ marginBottom: 20, marginTop: 0 }}
-                  placeholder="Select Family Status"
-                  searchPlaceholder="Search Family Status"
-                  setSelected={handleChange('family_status')}
-                  boxStyles={{ marginBottom: 10, borderRadius: 4, marginTop: 10 }}
-                  data={
-                    dropDownValues.FAMILY_STATUS
-                      ? formatDropdownValues(dropDownValues?.FAMILY_STATUS)
-                      : []
-                  }
-                />
+                {renderDropdown('OCCUPATION', 'occupation', values, 'Occupation')}
+                {renderDropdown('SALARY', 'salary', values, 'Annual Income')}
+
+                {renderDropdown('FAMILY_TYPE', 'family_type', values, 'Family Type')}
+                {renderDropdown('FAMILY_STATUS', 'family_status', values, 'Family Status')}
+
+
                 <TextInput
                   value={values.fathers_occupation}
                   style={styles.Input}
@@ -540,7 +410,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_brothers}
+                  value={values.no_of_brothers.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -550,7 +420,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_brothers_married}
+                  value={values.no_of_brothers_married.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -560,7 +430,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_sisters}
+                  value={values.no_of_sisters.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -570,7 +440,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_sisters_married}
+                  value={values.no_of_sisters_married.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"

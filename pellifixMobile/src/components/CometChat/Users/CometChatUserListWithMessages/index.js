@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 import React from 'react';
-import { SafeAreaView, View, ToastAndroid } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 
 import CometChatOutgoingCall from '../../Calls/CometChatOutgoingCall';
@@ -14,6 +14,10 @@ import * as actions from '../../utils/actions';
 import * as enums from '../../utils/enums';
 import { logger } from '../../utils/common';
 import DropDownAlert from '../../Shared/DropDownAlert';
+import { getMembership } from '../../../../services/api';
+import ToastMessage from '../../../common/Toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Paragraph, Button } from 'react-native-paper';
 
 class CometChatUserListWithMessages extends React.Component {
   loggedInUser = null;
@@ -33,12 +37,14 @@ class CometChatUserListWithMessages extends React.Component {
       imageView: null,
       viewDetailScreen: false,
       isActive: true,
+      credential: "",
+      isChatEnable: false
     };
 
     this.theme = { ...theme, ...this.props.theme };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
 
     if (!Object.keys(this.state.item).length) {
       this.toggleSideBar();
@@ -50,7 +56,39 @@ class CometChatUserListWithMessages extends React.Component {
         this.loggedInUser = user;
       })
       .catch(() => { });
+
+    // const chatTokenInfo = await AsyncStorage.getItem("chat_keys");
+    // if (chatTokenInfo && chatTokenInfo.token) {
+    //   this.setState({
+    //     credential: this.base64ToJson(chatTokenInfo.token)
+    //   });
+    // }
+    this.checkSubscription();
   }
+
+  base64ToJson = (base64String) => {
+    const json = Buffer.from(base64String, "base64").toString();
+    return JSON.parse(json);
+  }
+
+  // Check if the user subscribed or not
+  checkSubscription = async () => {
+    try {
+      const response = await getMembership();
+      if (response && response.status >= 200 && response.status <= 300) {
+        if (response?.data?.is_membership) {
+          this.setState({
+            isChatEnable: true
+          });
+        }
+      }
+    } catch (error) {
+      this.setState({
+        isChatEnable: false
+      });
+      ToastMessage('error', error?.response?.data?.error?.message || "Something wend wrong");
+    }
+  };
 
   componentWillUnmount() {
     // this.removeBlurListener()
@@ -185,7 +223,7 @@ class CometChatUserListWithMessages extends React.Component {
    * @param type: clicked item type
    */
   navigateToMessageListScreen = (item, type) => {
-    const navigateTo = this.props.chatType ? `/auth/${enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES}` : '/auth/view-profile';
+    const navigateTo = this.props.chatType ? `/auth/${enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES}` : '/auth/view-selected-profile';
     this.props.navigate(
       navigateTo,
       {
@@ -395,42 +433,64 @@ class CometChatUserListWithMessages extends React.Component {
     }
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
-        <View style={{ backgroundColor: 'white' }}>
-          <CometChatUserList
-            theme={this.theme}
-            item={this.state.item}
-            type={this.state.type}
-            onItemClick={this.itemClicked}
-            actionGenerated={this.actionHandler}
-            navigation={this.props.navigate}
-            chatType={this.props.chatType ? this.props.chatType : ''}
-            handleFavourite={this.props.handleFavourite}
-          />
-          {imageView}
-          {this.state.isActive ?
-            <>
-              <CometChatIncomingCall
-                showMessage={(type, message) => {
-                  this.dropDownAlertRef?.showMessage(type, message);
-                }}
-                theme={this.props.theme}
-                loggedInUser={this.loggedInUser}
-                outgoingCall={this.state.outgoingCall}
-                actionGenerated={this.actionHandler}
-              />
-              <CometChatOutgoingCall
-                theme={this.props.theme}
-                item={this.state.item}
-                type={this.state.type}
-                incomingCall={this.state.incomingCall}
-                outgoingCall={this.state.outgoingCall}
-                loggedInUser={this.loggedInUser}
-                lang={this.state.lang}
-                actionGenerated={this.actionHandler}
-              />
-            </> : null}
-          <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
-        </View>
+        {this.state.isChatEnable ?
+          <View style={{ backgroundColor: 'white' }}>
+            <CometChatUserList
+              theme={this.theme}
+              item={this.state.item}
+              type={this.state.type}
+              onItemClick={this.itemClicked}
+              actionGenerated={this.actionHandler}
+              navigation={this.props.navigate}
+              chatType={this.props.chatType ? this.props.chatType : ''}
+              handleFavourite={this.props.handleFavourite}
+              dailyRecommendations={this.props.dailyRecommendations}
+            />
+            {imageView}
+            {this.state.isActive ?
+              <>
+                <CometChatIncomingCall
+                  showMessage={(type, message) => {
+                    this.dropDownAlertRef?.showMessage(type, message);
+                  }}
+                  theme={this.props.theme}
+                  loggedInUser={this.loggedInUser}
+                  outgoingCall={this.state.outgoingCall}
+                  actionGenerated={this.actionHandler}
+                />
+                <CometChatOutgoingCall
+                  theme={this.props.theme}
+                  item={this.state.item}
+                  type={this.state.type}
+                  incomingCall={this.state.incomingCall}
+                  outgoingCall={this.state.outgoingCall}
+                  loggedInUser={this.loggedInUser}
+                  lang={this.state.lang}
+                  actionGenerated={this.actionHandler}
+                />
+              </> : null}
+            <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+          </View>
+          : <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Paragraph style={{ textAlign: 'center', marginVertical: 10, color: 'gray' }}>User not subscribed!</Paragraph>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Button
+                onPress={() => this.props.navigate('/auth/subscription', {
+                  state: {
+                    routeInfo: { title: 'Subscription' }
+                  }
+                })}
+                variant="contained"
+                buttonColor='red'
+                textColor='white'
+                width={200}
+                style={{ margin: 10 }}
+              >
+                Subscribe Now
+              </Button>
+            </View>
+          </View>
+        }
       </CometChatContextProvider>
     );
   }
