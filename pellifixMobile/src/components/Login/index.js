@@ -5,9 +5,8 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Button,
 } from 'react-native';
-import { Card, Text, TextInput, Paragraph } from 'react-native-paper';
+import { Card, Text, TextInput, Paragraph, Button } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { login } from '../../services/api';
@@ -175,12 +174,9 @@ const Login = () => {
                   Forgot Password?
                 </Paragraph>
                 <TouchableOpacity onPress={handleSubmit}>
-                  <Button
-                    style={styles.Submit}
-                    mode="contained"
-                    title={'Login'}
-                    onPress={handleSubmit}
-                  />
+                  <Button style={styles.Submit} mode="contained">
+                    Login
+                  </Button>
                 </TouchableOpacity>
                 <View style={styles.CardTitles}>
                   <Text>

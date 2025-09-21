@@ -26,14 +26,14 @@ target 'pellifix' do
   )
 
   post_install do |installer|
-    installer.pods_project.targets.each do |target|
-      if target.name == 'RCT-Folly' || target.name == 'Flipper‑Folly'
-        target.build_configurations.each do |config|
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_CFG_NO_COROUTINES=1'
-        end
-      end
-    end
+    # installer.pods_project.targets.each do |target|
+    #   if target.name == 'RCT-Folly' || target.name == 'Flipper‑Folly'
+    #     target.build_configurations.each do |config|
+    #       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+    #       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_CFG_NO_COROUTINES=1'
+    #     end
+    #   end
+    # end
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
