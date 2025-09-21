@@ -16,7 +16,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 
 import style from './styles';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import DocumentPicker from 'react-native-document-picker';
+// import DocumentPicker from 'react-native-document-picker';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { heightRatio } from '../../utils/consts';
 import { CometChatContext } from '../../utils/CometChatContext';
@@ -96,7 +96,7 @@ export default class ComposerActions extends Component {
             includeBase64: false,
             cameraType: 'back',
           },
-          (response) => {
+          response => {
             // this.sheetRef?.current?.snapTo(1);
             this.props.close();
             if (response.didCancel) {
@@ -104,7 +104,10 @@ export default class ComposerActions extends Component {
             }
             let type = null;
             let name = null;
-            if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
+            if (
+              Platform.OS === 'ios' &&
+              response.assets[0].fileName !== undefined
+            ) {
               name = response.assets[0].fileName;
               type = response.assets[0].type;
             } else {
@@ -144,7 +147,7 @@ export default class ComposerActions extends Component {
     }
   };
 
-  launchLibrary = (mediaType) => {
+  launchLibrary = mediaType => {
     try {
       launchImageLibrary(
         {
@@ -152,7 +155,7 @@ export default class ComposerActions extends Component {
           includeBase64: false,
           cameraType: 'back',
         },
-        (response) => {
+        response => {
           // this.sheetRef?.current?.snapTo(1);
           this.props.close();
           if (response.didCancel) {
@@ -160,7 +163,10 @@ export default class ComposerActions extends Component {
           }
           let type = null;
           let name = null;
-          if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
+          if (
+            Platform.OS === 'ios' &&
+            response.assets[0].fileName !== undefined
+          ) {
             name = response.assets[0].fileName;
             type = response.assets[0].type;
           } else {
@@ -197,32 +203,33 @@ export default class ComposerActions extends Component {
   };
 
   pickDocument = async () => {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      const file = {
-        name: res[0].name,
-        type: res[0].type,
-        uri: res[0].uri,
-      };
-      this.props.sendMediaMessage(file, CometChat.MESSAGE_TYPE.FILE);
-      // this.sheetRef?.current?.snapTo(1);
-      this.props.close();
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
-      } else {
-        throw err;
-      }
-    }
+    // try {
+    //   const res = await DocumentPicker.pick({
+    //     type: [DocumentPicker.types.allFiles],
+    //   });
+    //   const file = {
+    //     name: res[0].name,
+    //     type: res[0].type,
+    //     uri: res[0].uri,
+    //   };
+    //   this.props.sendMediaMessage(file, CometChat.MESSAGE_TYPE.FILE);
+    //   // this.sheetRef?.current?.snapTo(1);
+    //   this.props.close();
+    // } catch (err) {
+    //   if (DocumentPicker.isCancel(err)) {
+    //     // User cancelled the picker, exit any dialogs or menus and move on
+    //   } else {
+    //     throw err;
+    //   }
+    // }
   };
 
   renderContent = () => {
     let takePhotoBtn = (
       <TouchableOpacity
         style={style.actionButtonContainer}
-        onPress={() => this.takePhoto()}>
+        onPress={() => this.takePhoto()}
+      >
         <EvilIcon name="camera" size={24} />
         <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
           Take Photo
@@ -232,14 +239,16 @@ export default class ComposerActions extends Component {
     let takeVideoBtn = (
       <TouchableOpacity
         style={style.actionButtonContainer}
-        onPress={() => this.takePhoto('video')}>
+        onPress={() => this.takePhoto('video')}
+      >
         <IonIcon name="videocam-outline" size={24} />
         <Text
           style={{
             fontSize: 18,
             marginLeft: 10,
             fontWeight: '500',
-          }}>
+          }}
+        >
           Take Video
         </Text>
       </TouchableOpacity>
@@ -247,7 +256,8 @@ export default class ComposerActions extends Component {
     let avp = (
       <TouchableOpacity
         style={style.actionButtonContainer}
-        onPress={() => this.launchLibrary('photo')}>
+        onPress={() => this.launchLibrary('photo')}
+      >
         <IonIcon name="image-outline" size={24} />
 
         <Text
@@ -255,7 +265,8 @@ export default class ComposerActions extends Component {
             fontSize: 18,
             marginLeft: 10,
             fontWeight: '500',
-          }}>
+          }}
+        >
           Photo Library
         </Text>
       </TouchableOpacity>
@@ -263,7 +274,8 @@ export default class ComposerActions extends Component {
     let vp = (
       <TouchableOpacity
         style={style.actionButtonContainer}
-        onPress={() => this.launchLibrary('video')}>
+        onPress={() => this.launchLibrary('video')}
+      >
         <IonIcon name="videocam-outline" size={24} />
 
         <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
@@ -274,7 +286,8 @@ export default class ComposerActions extends Component {
     let docs = (
       <TouchableOpacity
         style={style.actionButtonContainer}
-        onPress={this.pickDocument}>
+        onPress={this.pickDocument}
+      >
         <IonIcon name="ios-folder-outline" size={24} />
 
         <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
@@ -289,7 +302,8 @@ export default class ComposerActions extends Component {
 
         <Text
           style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}
-          onPress={() => this.props.toggleStickers()}>
+          onPress={() => this.props.toggleStickers()}
+        >
           Send Sticker
         </Text>
       </TouchableOpacity>
@@ -300,7 +314,8 @@ export default class ComposerActions extends Component {
         style={style.actionButtonContainer}
         onPress={() => {
           this.props.toggleCreatePoll();
-        }}>
+        }}
+      >
         <MCIIcon name="comment-plus-outline" size={24} />
 
         <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
@@ -337,28 +352,34 @@ export default class ComposerActions extends Component {
   };
 
   renderHeader = () => <View style={style.header} />;
-  handleSheetChanges = (index) => {
+  handleSheetChanges = index => {
     console.log('handleSheetChanges', index);
   };
   render() {
     const { visible, close } = this.props;
     return (
-      <Modal transparent animated animationType="fade" visible={visible}
+      <Modal
+        transparent
+        animated
+        animationType="fade"
+        visible={visible}
         onRequestClose={() => {
           // this.sheetRef?.current?.snapTo(1);
-          this.props.close()
-        }}>
+          this.props.close();
+        }}
+      >
         <View style={style.bottomSheetContainer}>
           <TouchableWithoutFeedback
             onPress={() => {
               // this.sheetRef?.current?.snapTo(1);
               this.props.close();
-            }}>
+            }}
+          >
             <View style={style.fullFlex}>
               <BottomSheet
                 ref={this.sheetRef}
                 index={1}
-                snapPoints={["25%", "50%", "90%"]}
+                snapPoints={['25%', '50%', '90%']}
                 onChange={this.handleSheetChanges}
                 enablePanDownToClose={true}
               >

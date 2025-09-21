@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -33,15 +40,24 @@ const Register = () => {
     resendOtp(payload).then(
       async res => {
         if (res) {
-          ToastMessage('success', 'OTP has been sent to your mobile number.')
+          ToastMessage('success', 'OTP has been sent to your mobile number.');
         }
       },
       err => {
         console.log(err, 'err');
-        ToastMessage('error', err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!')
+        ToastMessage(
+          'error',
+          err.response &&
+            err.response.data &&
+            err.response.data.error &&
+            err.response.data.error.message &&
+            err.response.data.error.name == 'Error'
+            ? err.response.data.error.message
+            : 'Try Again!',
+        );
       },
     );
-  }
+  };
   return (
     <>
       <View
@@ -52,7 +68,8 @@ const Register = () => {
           height: 70,
           width: '100%',
           flexDirection: 'row',
-        }}>
+        }}
+      >
         <TouchableOpacity
           style={{
             width: '20%',
@@ -60,16 +77,13 @@ const Register = () => {
             paddding: 10,
             alignItems: 'center',
           }}
-          onPress={() => navigate('/')}>
+          onPress={() => navigate('/')}
+        >
           <Icon name="chevron-left" size={35} color="white" />
         </TouchableOpacity>
-        <Text
-          style={styles.backIcon}>
-          Back
-        </Text>
+        <Text style={styles.backIcon}>Back</Text>
       </View>
       <View style={styles.Container}>
-
         <Card style={styles.Card} elevation={1}>
           <Card.Content style={styles.CardInner}>
             {!sendOtp ? (
@@ -99,16 +113,29 @@ const Register = () => {
                       console.log(res, 'res');
                       if (res.data) {
                         setFormData(payload);
-                        ToastMessage('success', 'OTP has been sent to your mobile number.');
+                        ToastMessage(
+                          'success',
+                          'OTP has been sent to your mobile number.',
+                        );
                         setSendOtp(true);
                       }
                     },
                     err => {
                       console.log(err.response, 'err');
-                      ToastMessage('error', err.response && err.response.data && err.response.data.error && err.response.data.error.message && err.response.data.error.name == 'Error' ? err.response.data.error.message : 'Try Again!')
+                      ToastMessage(
+                        'error',
+                        err.response &&
+                          err.response.data &&
+                          err.response.data.error &&
+                          err.response.data.error.message &&
+                          err.response.data.error.name == 'Error'
+                          ? err.response.data.error.message
+                          : 'Try Again!',
+                      );
                     },
-                  )
-                }}>
+                  );
+                }}
+              >
                 {({
                   values,
                   errors,
@@ -218,7 +245,8 @@ const Register = () => {
                     <Button
                       style={styles.Submit}
                       mode="contained"
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       Register
                     </Button>
                     <View style={styles.CardTitles}>
@@ -226,7 +254,8 @@ const Register = () => {
                         Already't have an Account?{' '}
                         <Text
                           onPress={() => navigate('/')}
-                          style={styles.Underline}>
+                          style={styles.Underline}
+                        >
                           Login
                         </Text>
                       </Text>
@@ -247,7 +276,10 @@ const Register = () => {
                   submitOtp(payload).then(
                     async res => {
                       if (res) {
-                        ToastMessage('success', 'Registration successfully completed!');
+                        ToastMessage(
+                          'success',
+                          'Registration successfully completed!',
+                        );
                         navigate('/login');
                       }
                     },
@@ -256,7 +288,8 @@ const Register = () => {
                       ToastMessage('error', 'Try Again!');
                     },
                   );
-                }}>
+                }}
+              >
                 {({
                   values,
                   errors,
@@ -270,11 +303,11 @@ const Register = () => {
                       {/* <Text style={styles.Title} variant="displaySmall">
                         Pellifix
                       </Text> */}
-                      <Image
+                      {/* <Image
                         style={{ width: 200, height: 80, marginBottom: 10 }}
                         source={require('../../assets/logo.png')}
                         alt='img'
-                      />
+                      /> */}
                       <Text variant="titleMedium">
                         An 6 digit OTP has sent to your +91 {formData.mobileno}{' '}
                         mobile number, please enter below
@@ -290,7 +323,10 @@ const Register = () => {
                       label="OTP"
                       mode="outlined"
                     />
-                    <TouchableOpacity onPress={handleResendOtp} style={styles.resendOtpView}>
+                    <TouchableOpacity
+                      onPress={handleResendOtp}
+                      style={styles.resendOtpView}
+                    >
                       <Text variant="titleMedium" style={styles.resendOtp}>
                         Resend OTP
                       </Text>
@@ -298,7 +334,8 @@ const Register = () => {
                     <Button
                       style={styles.Submit}
                       mode="contained"
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       Submit
                     </Button>
                   </View>
@@ -311,7 +348,6 @@ const Register = () => {
     </>
   );
 };
-
 
 const styles = StyleSheet.create({
   Container: {
@@ -376,9 +412,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   resendOtpView: {
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
 });
-
 
 export default Register;
