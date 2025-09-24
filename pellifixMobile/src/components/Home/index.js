@@ -1,157 +1,140 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Dimensions, Image, ScrollView} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import {
-  Card,
-  Text,
-  TextInput,
-  Button,
-  IconButton,
-  Paragraph,
-} from 'react-native-paper';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
-import {getProfiles} from '../../services/api';
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import { Card, Text, IconButton, Paragraph } from 'react-native-paper';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { useNavigate } from 'react-router-native';
+import { useDispatch, useSelector } from 'react-redux';
+import CometChatUserListWithMessages from '../CometChat/Users/CometChatUserListWithMessages';
+import * as dashboardActions from '../../redux-store/actions/dashboardActions';
+import { addToWishList } from '../../services/api';
+import ToastMessage from '../common/Toast';
 
 const Home = () => {
+  const navigate = useNavigate();
   const width = Dimensions.get('window').width;
-  const profiles = [
-    {
-      id: 1,
-      name: 'Stefie',
-      img: require('../../assets/img/profiles/p1.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Laxu',
-      img: require('../../assets/img/profiles/p2.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Ramx',
-      img: require('../../assets/img/profiles/p3.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Loxy',
-      img: require('../../assets/img/profiles/p4.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Stefie',
-      img: require('../../assets/img/profiles/p1.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Laxu',
-      img: require('../../assets/img/profiles/p2.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Ramx',
-      img: require('../../assets/img/profiles/p3.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Loxy',
-      img: require('../../assets/img/profiles/p4.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Stefie',
-      img: require('../../assets/img/profiles/p1.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Laxu',
-      img: require('../../assets/img/profiles/p2.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Ramx',
-      img: require('../../assets/img/profiles/p3.jpg'),
-    },
-    {
-      id: 1,
-      name: 'Loxy',
-      img: require('../../assets/img/profiles/p4.jpg'),
-    },
-  ];
-  const [dailyRecommendation, setDailyRecommendation] = useState([]);
-  const [horoscopeMatches, setHoroscopeMatches] = useState([]);
-  const [preferenceMatches, setPreferenceMatches] = useState([]);
+  const dispatch = useDispatch();
+  const dashboardInfo = {
+    dailyRecommendations: useSelector(
+      state => state.dashboardReducer.dailyRecommendations,
+    ),
+    horoscopeMatches: useSelector(
+      state => state.dashboardReducer.horoscopicMatches,
+    ),
+    preferenceMatches: useSelector(
+      state => state.dashboardReducer.preferenceMatches,
+    ),
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    getDashboardData();
+  }, []);
+
+  const getDashboardData = () => {
+    setTimeout(async () => {
+      await dispatch(dashboardActions.fetchDailyProfiles('daily'));
+      await dispatch(dashboardActions.fetchHoroscopicProfiles('horoscopic'));
+      await dispatch(dashboardActions.fetchPreferenceProfiles('preference'));
+
+      setIsLoading(false);
+    }, 3000);
+  };
 
   const styles = StyleSheet.create({
     container: {
-      width: '100%',
       padding: 10,
-      height: Dimensions.get('window').height,
-      backgroundColor: 'whitesmoke',
+      marginBottom: 150,
     },
     slide: {
       height: 300,
       backgroundColor: 'red',
     },
+    loaderContainer: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      opacity: 0.5,
+      backgroundColor: '#F5FCFF88',
+      zIndex: 1,
+    },
+    paragraph: { textAlign: 'center', marginVertical: 10, color: 'gray' },
   });
 
-  useEffect(() => {
-    getDailyProfiles();
-    getHoroscopicProfiles();
-    getPreferenceProfiles(); 
-  },[]);
+  const handleFavourite = async (index, type) => {
+    setIsLoading(true);
+    let data = [...dashboardInfo[type]];
 
-  const getDailyProfiles = async () => {
-    const response = await getProfiles('daily');
-    if (response) {
-      console.log(response.data, 'dat');
-      setDailyRecommendation(response.data);
-    }
-  };
-
-  const getHoroscopicProfiles = async () => {
-    const response = await getProfiles('horoscopic');
-    if (response) {
-      setHoroscopeMatches(response.data);
-    }
-  };
-
-  const getPreferenceProfiles = async () => {
-    const response = await getProfiles('preference');
-    if (response) {
-      setPreferenceMatches(response.data);
+    const payload = {
+      is_liked: !data[index]['is_liked'],
+      short_id: Number(data[index]['id']),
+    };
+    const response = await addToWishList(payload);
+    if (response && response.data && response.data.message) {
+      await getDashboardData();
+      ToastMessage('success', response.data.message);
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={{marginVertical: 15}} variant="titleLarge">
-        Daily Recommendations
-      </Text>
-      {dailyRecommendation && dailyRecommendation.length ? (
-        <View style={{height: 500}}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {isLoading && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={'red'} animating={isLoading} />
+        </View>
+      )}
+      <ScrollView style={styles.container}>
+        <Text style={{ marginVertical: 15 }} variant="titleLarge">
+          Daily Recommendations
+        </Text>
+        <CometChatUserListWithMessages
+          navigate={navigate}
+          handleFavourite={handleFavourite}
+          dailyRecommendations={
+            dashboardInfo && dashboardInfo.dailyRecommendations
+          }
+        />
+
+        {/* {dailyRecommendation && dailyRecommendation.length && dailyRecommendation.length > 0 ? (
+        <View style={{ height: 500 }}>
           <SwiperFlatList
             autoplay
             autoplayLoop
             index={0}
             data={dailyRecommendation}
-            renderItem={({item}) => (
-              <Card elevation={4}>
+            renderItem={({ item }) => (
+              <Card elevation={4} onPress={() => openUserProfileDetails(item)}>
                 <Card.Title
-                  style={{width: width - 15}}
+                  style={{ width: width - 15 }}
                   title={item.name}
                   subtitle="September 14, 2016"
                   right={props => (
                     <IconButton
                       {...props}
                       icon="cards-heart-outline"
-                      onPress={() => {}}
+                      onPress={() => { }}
                     />
                   )}
                 />
 
                 <Card.Cover
-                  style={{width: width, height: 300}}
+                  style={{ width: width, height: 300 }}
                   source={item.img}
                 />
-                <Card.Content style={{width: width - 20}}>
+                <Card.Content style={{ width: width - 20 }}>
                   <Paragraph>
                     This impressive paella is a perfect party dish and a fun
                     meal to cook together with your guests. Add 1 cup of frozen
@@ -164,37 +147,104 @@ const Home = () => {
         </View>
       ) : (
         <Paragraph>No Data found!</Paragraph>
-      )}
-      <Text style={{marginVertical: 5}} variant="titleLarge">
-        Horoscopic Matches
-      </Text>
-      {horoscopeMatches && horoscopeMatches.length ? (
-        <View style={{height: 500}}>
+      )} */}
+        <Text style={{ marginVertical: 5 }} variant="titleLarge">
+          Horoscopic Matches
+        </Text>
+        {dashboardInfo &&
+        dashboardInfo.horoscopeMatches &&
+        dashboardInfo.horoscopeMatches.length ? (
+          <View style={{ height: 500 }}>
+            <SwiperFlatList
+              autoplay
+              autoplayLoop
+              index={0}
+              data={dashboardInfo.horoscopeMatches}
+              renderItem={({ item, index }) => (
+                <Card elevation={4} style={{ margin: 10 }}>
+                  <Card.Title
+                    style={{ width: width - 15 }}
+                    title={item.name}
+                    subtitle="September 14, 2016"
+                    right={props => (
+                      <IconButton
+                        {...props}
+                        icon={
+                          item.is_liked ? 'cards-heart' : 'cards-heart-outline'
+                        }
+                        onPress={() =>
+                          handleFavourite(index, 'horoscopeMatches')
+                        }
+                        iconColor={item.is_liked ? 'red' : 'gray'}
+                      />
+                    )}
+                  />
+
+                  <Card.Cover
+                    style={{ width: width, height: 300 }}
+                    source={
+                      item.image
+                        ? { uri: item.image }
+                        : require('../../assets/img/profiles/default.jpg')
+                    }
+                    alt="img"
+                  />
+                  <Card.Content style={{ width: width - 20 }}>
+                    <Paragraph>
+                      This impressive paella is a perfect party dish and a fun
+                      meal to cook together with your guests. Add 1 cup of
+                      frozen peas along with the mussels, if you like.
+                    </Paragraph>
+                  </Card.Content>
+                </Card>
+              )}
+            />
+          </View>
+        ) : (
+          <Paragraph style={styles.paragraph}>No Data found!</Paragraph>
+        )}
+        <Text style={{ marginVertical: 5 }} variant="titleLarge">
+          Preference Matches
+        </Text>
+        {dashboardInfo &&
+        dashboardInfo.preferenceMatches &&
+        dashboardInfo.preferenceMatches.length ? (
           <SwiperFlatList
             autoplay
             autoplayLoop
+            autoplayDelay={2}
             index={0}
-            data={horoscopeMatches}
-            renderItem={({item}) => (
-              <Card elevation={4}>
+            data={dashboardInfo.preferenceMatches}
+            renderItem={({ item, index }) => (
+              <Card style={{ margin: 10 }}>
                 <Card.Title
-                  style={{width: width - 15}}
+                  style={{ width: width - 15 }}
                   title={item.name}
                   subtitle="September 14, 2016"
                   right={props => (
                     <IconButton
                       {...props}
-                      icon="cards-heart-outline"
-                      onPress={() => {}}
+                      icon={
+                        item.is_liked ? 'cards-heart' : 'cards-heart-outline'
+                      }
+                      onPress={() =>
+                        handleFavourite(index, 'preferenceMatches')
+                      }
+                      iconColor={item.is_liked ? 'red' : 'gray'}
                     />
                   )}
                 />
 
                 <Card.Cover
-                  style={{width: width, height: 300}}
-                  source={item.img}
+                  style={{ width: width, height: 300 }}
+                  source={
+                    item.image
+                      ? { uri: item.image }
+                      : require('../../assets/img/profiles/default.jpg')
+                  }
+                  alt="img"
                 />
-                <Card.Content style={{width: width - 20}}>
+                <Card.Content style={{ width: width - 20 }}>
                   <Paragraph>
                     This impressive paella is a perfect party dish and a fun
                     meal to cook together with your guests. Add 1 cup of frozen
@@ -204,54 +254,11 @@ const Home = () => {
               </Card>
             )}
           />
-        </View>
-      ) : (
-        <Paragraph>No Data found!</Paragraph>
-      )}
-      <Text style={{marginVertical: 5}} variant="titleLarge">
-        Preference Matches
-      </Text>
-      {preferenceMatches && preferenceMatches.length ? (
-        <View style={{height: 800}}>
-          <SwiperFlatList
-            autoplay
-            autoplayLoop
-            index={0}
-            data={dailyRecommendation}
-            renderItem={({item}) => (
-              <Card elevation={4}>
-                <Card.Title
-                  style={{width: width - 15}}
-                  title={item.name}
-                  subtitle="September 14, 2016"
-                  right={props => (
-                    <IconButton
-                      {...props}
-                      icon="cards-heart-outline"
-                      onPress={() => {}}
-                    />
-                  )}
-                />
-
-                <Card.Cover
-                  style={{width: width, height: 300}}
-                  source={item.img}
-                />
-                <Card.Content style={{width: width - 20}}>
-                  <Paragraph>
-                    This impressive paella is a perfect party dish and a fun
-                    meal to cook together with your guests. Add 1 cup of frozen
-                    peas along with the mussels, if you like.
-                  </Paragraph>
-                </Card.Content>
-              </Card>
-            )}
-          />
-        </View>
-      ) : (
-        <Paragraph>No Data found!</Paragraph>
-      )}
-    </ScrollView>
+        ) : (
+          <Paragraph style={styles.paragraph}>No Data found!</Paragraph>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 export default Home;

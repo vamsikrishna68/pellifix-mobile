@@ -1,0 +1,49 @@
+diff --git a/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm b/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm
+index 594eba3..2ee0452 100644
+--- a/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm
++++ b/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm
+@@ -101,18 +101,32 @@ void decorateRuntime(jsi::Runtime &runtime)
+         if (!arguments[0].isObject()) {
+           return jsi::Value::null();
+         }
+-        auto shadowNode = shadowNodeFromValue(runtime, arguments[0]);
+-
+-        if (dynamic_pointer_cast<const ParagraphShadowNode>(shadowNode)) {
+-          return jsi::Value(true);
+-        }
+-
+-        if (dynamic_pointer_cast<const TextShadowNode>(shadowNode)) {
+-          return jsi::Value(true);
+-        }
+-
+-        bool isViewFlatteningDisabled = shadowNode->getTraits().check(ShadowNodeTraits::FormsStackingContext);
+-
++        auto shadowNode = shadowNodeListFromValue(runtime, arguments[0]);
++          bool isViewFlatteningDisabled=false;
++
++          // Removed dynamic casts due to ShadowNode not being polymorphic in RN 0.81
++           // Fallback: use traits or type info if available, otherwise skip
++              #if 0
++              if (dynamic_pointer_cast<const ParagraphShadowNode>(shadowNode)) {
++                return jsi::Value(true);
++              }
++          
++              if (dynamic_pointer_cast<const TextShadowNode>(shadowNode)) {
++                return jsi::Value(true);
++              }
++              #else
++              // Alternative: use traits if ShadowNodeTraits provides info
++              // e.g., if shadowNode->getTraits().check(ShadowNodeTraits::Text) or similar
++              // Otherwise, simply return false or default behavior
++              #endif
++          if (!shadowNode->empty()) {
++              auto shadowNodes = shadowNode->front();
++              isViewFlatteningDisabled = shadowNodes->getTraits().check(ShadowNodeTraits::FormsStackingContext);
++             // ... rest of existing logic
++          } else {
++             // fallback, error handling, or treat as false
++              isViewFlatteningDisabled = false;
++          }
+         return jsi::Value(isViewFlatteningDisabled);
+       });
+   runtime.global().setProperty(runtime, "isViewFlatteningDisabled", std::move(isViewFlatteningDisabled));

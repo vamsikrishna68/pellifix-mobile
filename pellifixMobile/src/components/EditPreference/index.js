@@ -1,6 +1,6 @@
 // how to make multi slider in reactnative
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,11 +11,11 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import {Card, Text, TextInput, Button, Paragraph} from 'react-native-paper';
-import {Formik} from 'formik';
+import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
+import { Formik } from 'formik';
 import * as yup from 'yup';
-import {getEditPreference, patchEditPreference} from '../../services/api';
-import {useNavigate} from 'react-router-native';
+import { getEditPreference, patchEditPreference } from '../../services/api';
+import { useNavigate } from 'react-router-native';
 import SelectList from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -36,12 +36,14 @@ import {
   RELIGION,
   SMOKING_HABITS,
   STATE,
-} from '../../constants';
+} from '../../Constants/constants';
+import ToastMessage from '../common/Toast';
+
 const EditPreference = () => {
-  let navigate = useNavigate();
   const [age, setAge] = useState([18, 60]);
   const [height, setHeight] = useState([40, 80]);
   let districts = {};
+
   useEffect(() => {
     DISTRICT.forEach(
       item =>
@@ -56,7 +58,7 @@ const EditPreference = () => {
   const fetchEditPreference = async () => {
     const response = await getEditPreference().catch(console.log);
     if (response) {
-      console.log(response,"res");
+      console.log(response, 'res');
     }
   };
 
@@ -256,47 +258,18 @@ const EditPreference = () => {
         },
       ],
     },
-    {title: '', data: []},
+    { title: '', data: [] },
   ];
   return (
     <>
-      <View
-        style={{
-          backgroundColor: '#d53833',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          height: 70,
-          width: '100%',
-          flexDirection: 'row',
-        }}>
-        <TouchableOpacity
-          style={{
-            width: '20%',
-            justifyContent: 'flex-start',
-            paddding: 10,
-            alignItems: 'center',
-          }}
-          onPress={() => navigate('/auth/home')}>
-          <Icon name="chevron-left" size={35} color="white" />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: 'white',
-            width: '80%',
-            textAlign: 'left',
-            fontSize: 20,
-          }}>
-          Edit Preference
-        </Text>
-      </View>
       <View style={styles.Container}>
         <Card style={styles.Card} elevation={1}>
           <Card.Content style={styles.CardInner}>
             <Formik
               // validationSchema={loginValidationSchema}
               initialValues={{
-                age: {min: 0, max: 100},
-                height: {min: 0, max: 100},
+                age: { min: 0, max: 100 },
+                height: { min: 0, max: 100 },
                 marital_status: '',
                 mother_tongue: '',
                 physical_status: '',
@@ -322,26 +295,16 @@ const EditPreference = () => {
                   async res => {
                     console.log(res, 'res');
                     if (res.data) {
-                      toast.success('Registration successfully completed!', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        theme: 'colored',
-                        // transition: Zoom,
-                      });
-                      // navigate('/login');
+                      ToastMessage('success', 'Profile Updated Successfully!');
                     }
                   },
                   err => {
                     console.log(err, 'err');
-                    Toast.show({
-                      type: 'error',
-                      position: 'bottom',
-                      bottomOffset: 170,
-                      text1: 'Try Again!',
-                    });
+                    ToastMessage('error', 'Try Again!');
                   },
                 );
-              }}>
+              }}
+            >
               {({
                 values,
                 errors,
@@ -352,11 +315,12 @@ const EditPreference = () => {
               }) => (
                 <>
                   <SectionList
+                    style={{ marginBottom: 80 }}
                     sections={DATA(handleChange)}
                     keyExtractor={(item, index) => item + index}
-                    renderItem={({item}) => (
+                    renderItem={({ item }) => (
                       <>
-                        <Text style={{padding: 10}}>{item.name}</Text>
+                        <Text style={{ padding: 10 }}>{item.name}</Text>
                         {item.type === 'dropdown' ? (
                           <SelectList
                             dropdownStyles={styles.dropdown}
@@ -375,7 +339,7 @@ const EditPreference = () => {
                             <View style={styles.sliderText}>
                               <Text>{age[0]}</Text>
                             </View>
-                            <View style={{flex: 1}}>
+                            <View style={{ flex: 1 }}>
                               <MultiSlider
                                 markerStyle={{
                                   ...Platform.select({
@@ -440,7 +404,7 @@ const EditPreference = () => {
                             <View style={styles.sliderText}>
                               <Text>{(height[0] / 10).toPrecision(2)}</Text>
                             </View>
-                            <View style={{flex: 1}}>
+                            <View style={{ flex: 1 }}>
                               <MultiSlider
                                 markerStyle={{
                                   ...Platform.select({
@@ -512,22 +476,26 @@ const EditPreference = () => {
                         )}
                       </>
                     )}
-                    renderSectionHeader={({section: {title}}) => (
-                      <View
-                        style={{
-                          width: '100%',
-                          height: 50,
-                          backgroundColor: 'white',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={styles.header}>{title}</Text>
-                      </View>
-                    )}
+                    renderSectionHeader={({ section: { title } }) =>
+                      title ? (
+                        <View
+                          style={{
+                            width: '100%',
+                            height: 50,
+                            backgroundColor: 'white',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Text style={styles.header}>{title}</Text>
+                        </View>
+                      ) : null
+                    }
                   />
                   <View style={styles.footer}>
                     <TouchableOpacity
                       style={styles.button}
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       <Text style={styles.buttonText}>Submit</Text>
                     </TouchableOpacity>
                   </View>
@@ -572,7 +540,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  buttonText: {color: 'white'},
+  buttonText: { color: 'white' },
   button: {
     backgroundColor: 'red',
     width: '50%',
@@ -583,14 +551,17 @@ const styles = StyleSheet.create({
   },
   Container: {
     width: '100%',
-    height: Dimensions.get('window').height - 130,
+    height:
+      Platform.OS == 'ios'
+        ? Dimensions.get('window').height - 80
+        : Dimensions.get('window').height - 40,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#d53833',
-    marginBottom:120
+    // marginBottom:120
   },
-  header: {fontSize: 20},
+  header: { fontSize: 20 },
   Title: {
     color: '#d53833',
     marginBottom: 30,

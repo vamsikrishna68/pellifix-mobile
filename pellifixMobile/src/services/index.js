@@ -29,6 +29,7 @@ export async function apiService({
   if (authToken) {
     headers["Authorization"] = `Bearer ${JSON.parse(authToken).token}`;
   }
+
   return axios.request({
     url,
     method,

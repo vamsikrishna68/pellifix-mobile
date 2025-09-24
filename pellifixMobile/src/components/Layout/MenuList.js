@@ -1,54 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text,Icon} from 'react-native';
-import {Drawer} from 'react-native-paper';
-import {useNavigate} from 'react-router-native';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { Drawer } from 'react-native-paper';
+import { useNavigate } from 'react-router-native';
+import { routes } from '../../Constants/MenuListConstants';
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../../redux-store/actions/sidebarActions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const MenuList = ({close}) => {
-  const [active, setActive] = useState(0);
+const MenuList = ({ close }) => {
+  const activeIndex = useSelector(state => state.sidebarReducer.activeIndex);
   const navigate = useNavigate();
-
-  const routes = [
-    {
-      title: 'Home',
-      route: 'home',
-      icon: 'home',
-    },
-    {
-      title: 'Wish List',
-      route: 'wish-list',
-      icon: 'heart',
-    },
-    {
-      title: 'Chat',
-      route: 'chat',
-      icon: 'chat-processing',
-    },
-    {
-      title: 'Edit Profile',
-      route: '/auth/profile',
-      icon: 'account-edit',
-    },
-    {
-      title: 'Edit Preference',
-      route: 'edit-preference',
-      icon: 'wrench',
-    },
-    {
-      title: 'Compare Profile',
-      route: 'compare-profiles',
-      icon: 'account-switch',
-    },
-    {
-      title: 'Profile Viewed',
-      route: 'view-profile',
-      icon: 'account-edit',
-    },
-    {
-      title: 'Subscription',
-      route: 'subscription',
-      icon: 'account-edit',
-    }
-  ];
+  const dispatch = useDispatch();
   const [menus, setMenus] = useState([...routes]);
 
   const styles = {
@@ -57,21 +19,51 @@ const MenuList = ({close}) => {
       padding: 0,
       width: 280,
     },
+    drawerItemStyle: {
+      borderRadius: 4,
+      width: '75%',
+    },
+  };
+
+  const selectedItem = (e, index) => {
+    dispatch(actions.activeItem(e, index));
+    navigate(e.route, {
+      state: {
+        routeInfo: e,
+      },
+    });
+    close();
   };
   return (
     <View style={styles.container}>
       {menus.map((e, i) => (
         <Drawer.Item
           key={i}
-          label={<Text >{e.title}</Text>}
-          icon={e.icon}
-          style={{borderRadius: 4,color:'white', width: '75%',backgroundColor:active===i?'#d53833':'white'}}
-          active={active === i}
-          onPress={() => {
-            setActive(i);
-            navigate(e.route);
-            close();
-          }}
+          label={
+            <Text
+              style={
+                activeIndex === i
+                  ? { color: 'white', fontWeight: 'bold' }
+                  : { color: 'black', fontWeight: 'bold' }
+              }
+            >
+              {e.title}
+            </Text>
+          }
+          icon={({ focused, color, size }) => (
+            <Icon
+              name={e.icon}
+              size={23}
+              color={activeIndex === i ? 'white' : 'black'}
+            />
+          )}
+          iconContainerStyle={'white'}
+          style={[
+            styles.drawerItemStyle,
+            { backgroundColor: activeIndex === i ? '#d53833' : 'white' },
+          ]}
+          active={activeIndex === i}
+          onPress={() => selectedItem(e, i)}
         />
       ))}
     </View>

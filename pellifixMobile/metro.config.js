@@ -1,17 +1,22 @@
 /**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
  *
- * @format
+ * @type {import('@react-native/metro-config').MetroConfig}
  */
 
-module.exports = {
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+
+const defaultConfig = getDefaultConfig(__dirname);
+const { assetExts, sourceExts } = defaultConfig.resolver;
+
+const config = {
+  resolver: {
+    assetExts: [...assetExts, 'jpg', 'jpeg', 'png', 'gif'], // ensure images are here
+    // you may also adjust sourceExts if you have custom file types
+  },
   transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
+    // usual options, if you're using SVG transformer etc.
   },
 };
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);

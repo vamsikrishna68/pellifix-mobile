@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { register } from '../../services/api';
+import { register, submitOtp, resendOtp } from '../../services/api';
 import { useNavigate } from 'react-router-native';
-import Toast from 'react-native-toast-message';
 import SelectList from 'react-native-dropdown-select-list';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ToastMessage from '../common/Toast';
 
 const Register = () => {
   let navigate = useNavigate();
@@ -27,58 +34,30 @@ const Register = () => {
     { key: 'Others', value: 'Othersself' },
   ];
   const loginValidationSchema = yup.object().shape({});
-  const styles = StyleSheet.create({
-    Container: {
-      width: '100%',
-      height: Dimensions.get('window').height,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#d53833',
-    },
-    Title: {
-      color: '#d53833',
-      marginBottom: 30,
-    },
-    Card: {
-      width: Dimensions.get('window').width - 50,
-      marginBottom: 50,
-      borderRadius: 10,
-    },
-    CardInner: {
-      width: '100%',
-    },
-    Input: {
-      marginBottom: 20,
-      textAlign: 'auto',
-    },
-    Input2: {
-      marginBottom: 10,
-    },
-    Submit: {
-      marginTop: 30,
-      borderRadius: 4,
-    },
-    CardTitles: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    Subtitle: {
-      marginVertical: 0,
-      letterSpacing: 1.5,
-    },
-    Underline: {
-      textDecorationLine: 'underline',
-      color: '#d53833',
-    },
-    Error: {
-      fontSize: 10,
-      color: 'red',
-    },
-  });
+
+  const handleResendOtp = () => {
+    const payload = { mobileno: formData.mobileno };
+    resendOtp(payload).then(
+      async res => {
+        if (res) {
+          ToastMessage('success', 'OTP has been sent to your mobile number.');
+        }
+      },
+      err => {
+        console.log(err, 'err');
+        ToastMessage(
+          'error',
+          err.response &&
+            err.response.data &&
+            err.response.data.error &&
+            err.response.data.error.message &&
+            err.response.data.error.name == 'Error'
+            ? err.response.data.error.message
+            : 'Try Again!',
+        );
+      },
+    );
+  };
   return (
     <>
       <View
@@ -89,7 +68,8 @@ const Register = () => {
           height: 70,
           width: '100%',
           flexDirection: 'row',
-        }}>
+        }}
+      >
         <TouchableOpacity
           style={{
             width: '20%',
@@ -97,21 +77,13 @@ const Register = () => {
             paddding: 10,
             alignItems: 'center',
           }}
-          onPress={() => navigate('/')}>
+          onPress={() => navigate('/')}
+        >
           <Icon name="chevron-left" size={35} color="white" />
         </TouchableOpacity>
-        <Text
-          style={{
-            color: 'white',
-            width: '80%',
-            textAlign: 'left',
-            fontSize: 20,
-          }}>
-          Back
-        </Text>
+        <Text style={styles.backIcon}>Back</Text>
       </View>
       <View style={styles.Container}>
-
         <Card style={styles.Card} elevation={1}>
           <Card.Content style={styles.CardInner}>
             {!sendOtp ? (
@@ -136,32 +108,34 @@ const Register = () => {
                     dob: moment(values.dob).format('yyyy-MM-DD'),
                   };
                   delete payload.confirmPassword;
-                  console.log(payload, 'payload');
                   register(payload).then(
                     async res => {
                       console.log(res, 'res');
                       if (res.data) {
                         setFormData(payload);
-                        Toast.show({
-                          type: 'success',
-                          position: 'bottom',
-                          bottomOffset: 170,
-                          text1: 'OTP has been sent to your mobile number.',
-                        });
+                        ToastMessage(
+                          'success',
+                          'OTP has been sent to your mobile number.',
+                        );
                         setSendOtp(true);
                       }
                     },
                     err => {
-                      console.log(err, 'err');
-                      Toast.show({
-                        type: 'error',
-                        position: 'bottom',
-                        bottomOffset: 170,
-                        text1: 'Try Again!',
-                      });
+                      console.log(err.response, 'err');
+                      ToastMessage(
+                        'error',
+                        err.response &&
+                          err.response.data &&
+                          err.response.data.error &&
+                          err.response.data.error.message &&
+                          err.response.data.error.name == 'Error'
+                          ? err.response.data.error.message
+                          : 'Try Again!',
+                      );
                     },
                   );
-                }}>
+                }}
+              >
                 {({
                   values,
                   errors,
@@ -175,6 +149,11 @@ const Register = () => {
                       <Text style={styles.Title} variant="displaySmall">
                         Pellifix
                       </Text>
+                      {/* <Image
+                        style={{ width: 200, height: 80, marginBottom: 10 }}
+                        source={require('../../assets/logo.png')}
+                        alt='img'
+                      /> */}
                       <Text variant="titleMedium" style={styles.Subtitle}>
                         Signup for new Account
                       </Text>
@@ -266,7 +245,8 @@ const Register = () => {
                     <Button
                       style={styles.Submit}
                       mode="contained"
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       Register
                     </Button>
                     <View style={styles.CardTitles}>
@@ -274,7 +254,8 @@ const Register = () => {
                         Already't have an Account?{' '}
                         <Text
                           onPress={() => navigate('/')}
-                          style={styles.Underline}>
+                          style={styles.Underline}
+                        >
                           Login
                         </Text>
                       </Text>
@@ -291,32 +272,24 @@ const Register = () => {
                     mobileno: `+91${values.mobileno}`,
                     otp: values.otp,
                   };
-                  console.log(payload, "paylaod")
 
-                  register(payload).then(
+                  submitOtp(payload).then(
                     async res => {
-                      console.log(res, 'res');
-                      if (res.data) {
-                        toast.success('Registration successfully completed!', {
-                          position: 'top-right',
-                          autoClose: 3000,
-                          theme: 'colored',
-                          transition: Zoom,
-                        });
+                      if (res) {
+                        ToastMessage(
+                          'success',
+                          'Registration successfully completed!',
+                        );
                         navigate('/login');
                       }
                     },
                     err => {
                       console.log(err, 'err');
-                      Toast.show({
-                        type: 'error',
-                        position: 'bottom',
-                        bottomOffset: 170,
-                        text1: 'Try Again!',
-                      });
+                      ToastMessage('error', 'Try Again!');
                     },
                   );
-                }}>
+                }}
+              >
                 {({
                   values,
                   errors,
@@ -327,10 +300,14 @@ const Register = () => {
                 }) => (
                   <View>
                     <View style={styles.CardTitles}>
-                      <Text style={styles.Title} variant="displaySmall">
+                      {/* <Text style={styles.Title} variant="displaySmall">
                         Pellifix
-                      </Text>
-
+                      </Text> */}
+                      {/* <Image
+                        style={{ width: 200, height: 80, marginBottom: 10 }}
+                        source={require('../../assets/logo.png')}
+                        alt='img'
+                      /> */}
                       <Text variant="titleMedium">
                         An 6 digit OTP has sent to your +91 {formData.mobileno}{' '}
                         mobile number, please enter below
@@ -346,10 +323,19 @@ const Register = () => {
                       label="OTP"
                       mode="outlined"
                     />
+                    <TouchableOpacity
+                      onPress={handleResendOtp}
+                      style={styles.resendOtpView}
+                    >
+                      <Text variant="titleMedium" style={styles.resendOtp}>
+                        Resend OTP
+                      </Text>
+                    </TouchableOpacity>
                     <Button
                       style={styles.Submit}
                       mode="contained"
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       Submit
                     </Button>
                   </View>
@@ -362,5 +348,72 @@ const Register = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  Container: {
+    width: '100%',
+    height: Dimensions.get('window').height,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#d53833',
+  },
+  Title: {
+    color: '#d53833',
+    marginBottom: 30,
+  },
+  Card: {
+    width: Dimensions.get('window').width - 50,
+    marginBottom: 50,
+    borderRadius: 10,
+  },
+  CardInner: {
+    width: '100%',
+  },
+  Input: {
+    marginBottom: 20,
+    textAlign: 'auto',
+  },
+  Input2: {
+    marginBottom: 10,
+  },
+  Submit: {
+    marginTop: 30,
+    borderRadius: 4,
+  },
+  CardTitles: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  Subtitle: {
+    marginVertical: 0,
+    letterSpacing: 1.5,
+  },
+  Underline: {
+    textDecorationLine: 'underline',
+    color: '#d53833',
+  },
+  Error: {
+    fontSize: 10,
+    color: 'red',
+  },
+  resendOtp: {
+    textAlign: 'right',
+    fontSize: 16,
+    color: 'blue',
+  },
+  backIcon: {
+    color: 'white',
+    width: '80%',
+    textAlign: 'left',
+    fontSize: 20,
+  },
+  resendOtpView: {
+    cursor: 'pointer',
+  },
+});
 
 export default Register;
