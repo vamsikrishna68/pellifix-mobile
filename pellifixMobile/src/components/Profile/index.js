@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Card, Text, TextInput, Button, Paragraph } from 'react-native-paper';
 import { Formik } from 'formik';
-import SelectList from 'react-native-dropdown-select-list';
 import * as yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -52,8 +51,7 @@ const Profile = () => {
   const getValues = async () => {
     await fetchDropdownValues();
     await getProfileData();
-
-  }
+  };
   const fetchDropdownValues = async () => {
     const response = await getDropdownValues();
     if (response) {
@@ -73,7 +71,7 @@ const Profile = () => {
       if (response && response.data) {
         setProfileData(response.data);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const validationSchema = yup.object().shape({
@@ -98,11 +96,11 @@ const Profile = () => {
     Submit: {
       marginTop: 10,
       borderRadius: 4,
-      width: '40%'
+      width: '40%',
     },
     submitView: {
       justifyContent: 'flex-end',
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     Error: {
       fontSize: 10,
@@ -145,12 +143,12 @@ const Profile = () => {
 
   const renderDropdown = (type, name, values, placeholder) => {
     const renderLabel = () => {
-      if (savedDropdownValues && savedDropdownValues[name] ? savedDropdownValues[name] : values[name]) {
-        return (
-          <Text style={[styles.label]}>
-            {placeholder}
-          </Text>
-        );
+      if (
+        savedDropdownValues && savedDropdownValues[name]
+          ? savedDropdownValues[name]
+          : values[name]
+      ) {
+        return <Text style={[styles.label]}>{placeholder}</Text>;
       }
       return null;
     };
@@ -162,23 +160,29 @@ const Profile = () => {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           iconStyle={styles.iconStyle}
-          data={dropDownValues[type]
-            ? formatDropdownValues(dropDownValues?.[type])
-            : []}
+          data={
+            dropDownValues[type]
+              ? formatDropdownValues(dropDownValues?.[type])
+              : []
+          }
           maxHeight={300}
           labelField="label"
           valueField="value"
           placeholder={`Select ${placeholder}`}
-          value={savedDropdownValues && savedDropdownValues[name] ? savedDropdownValues[name] : values[name]}
-          onChange={(item) => handleDropdown(name, item.value)}
+          value={
+            savedDropdownValues && savedDropdownValues[name]
+              ? savedDropdownValues[name]
+              : values[name]
+          }
+          onChange={item => handleDropdown(name, item.value)}
         />
       </View>
-    )
-  }
+    );
+  };
 
   const handleDropdown = (name, value) => {
-    setSavedDropdownValues({ ...savedDropdownValues, [name]: value })
-  }
+    setSavedDropdownValues({ ...savedDropdownValues, [name]: value });
+  };
 
   return (
     <View style={styles.Container}>
@@ -189,53 +193,111 @@ const Profile = () => {
           initialValues={profileData}
           onSubmit={values => {
             const data = { ...values };
-            Object.keys(data).forEach((e) => {
+            Object.keys(data).forEach(e => {
               if (data[e] == null) {
-                data[e] = "";
+                data[e] = '';
               }
             });
             let payload = { ...data };
             payload.height = payload.height ? parseFloat(payload.height) : 0;
             payload.weight = payload.weight ? parseFloat(payload.weight) : 0;
             payload.no_of_sisters_married = parseFloat(
-              payload.no_of_sisters_married
-                ? payload.no_of_sisters_married
-                : 0
+              payload.no_of_sisters_married ? payload.no_of_sisters_married : 0,
             );
             payload.no_of_brothers_married = parseFloat(
               payload.no_of_brothers_married
                 ? payload.no_of_brothers_married
-                : 0
+                : 0,
             );
             payload.no_of_brothers = parseFloat(
-              payload.no_of_brothers ? payload.no_of_brothers : 0
+              payload.no_of_brothers ? payload.no_of_brothers : 0,
             );
             payload.no_of_sisters = parseFloat(
-              payload.no_of_sisters ? payload.no_of_sisters : 0
+              payload.no_of_sisters ? payload.no_of_sisters : 0,
             );
-            payload.gender = savedDropdownValues && savedDropdownValues.gender ? savedDropdownValues.gender.toString() : payload.gender.toString();
-            payload.body_type = savedDropdownValues && savedDropdownValues.body_type ? savedDropdownValues.body_type : payload.body_type.toString();
-            payload.caste = savedDropdownValues && savedDropdownValues.caste ? savedDropdownValues.caste : payload.caste.toString();
-            payload.citizen = savedDropdownValues && savedDropdownValues.citizen ? savedDropdownValues.citizen.toString() : payload.citizen.toString();
-            payload.country = savedDropdownValues && savedDropdownValues.country ? savedDropdownValues.country.toString() : payload.country.toString();
-            payload.drinking_habit = savedDropdownValues && savedDropdownValues.drinking_habit ? savedDropdownValues.drinking_habit.toString() : payload.drinking_habit.toString();
-            payload.eating_habit = savedDropdownValues && savedDropdownValues.eating_habit ? savedDropdownValues.eating_habit.toString() : payload.eating_habit.toString();
-            payload.education = savedDropdownValues && savedDropdownValues.education ? savedDropdownValues.education.toString() : payload.education.toString();
-            payload.family_status = savedDropdownValues && savedDropdownValues.family_status ? savedDropdownValues.family_status.toString() : payload.family_status.toString();
-            payload.family_type = savedDropdownValues && savedDropdownValues.family_type ? savedDropdownValues.family_type.toString() : payload.family_type.toString();
-            payload.marital_status = savedDropdownValues && savedDropdownValues.marital_status ? savedDropdownValues.marital_status.toString() : payload.marital_status.toString();
-            payload.mother_tongue = savedDropdownValues && savedDropdownValues.mother_tongue ? savedDropdownValues.mother_tongue.toString() : payload.mother_tongue.toString();
-            payload.occupation = savedDropdownValues && savedDropdownValues.occupation ? savedDropdownValues.occupation.toString() : payload.occupation.toString();
-            payload.physical_status = savedDropdownValues && savedDropdownValues.physical_status ? savedDropdownValues.physical_status.toString() : payload.physical_status.toString();
-            payload.profession = payload.profession.toString();
-            payload.profile_creater = payload.profile_creater.toString();
-            payload.religion = savedDropdownValues && savedDropdownValues.religion ? savedDropdownValues.religion.toString() : payload.religion.toString();
-            payload.salary = savedDropdownValues && savedDropdownValues.salary ? savedDropdownValues.salary.toString() : payload.salary.toString();
-            payload.smoking_habit = savedDropdownValues && savedDropdownValues.smoking_habit ? savedDropdownValues.smoking_habit.toString() : payload.smoking_habit.toString();
-            payload.star = savedDropdownValues && savedDropdownValues.star ? savedDropdownValues.star.toString() : payload.star.toString();
-            payload.zodiac = payload.zodiac.toString();
-            payload.state = savedDropdownValues && savedDropdownValues.state ? savedDropdownValues.state.toString() : payload.state.toString();
-            payload.district = savedDropdownValues && savedDropdownValues.district ? savedDropdownValues.district.toString() : payload.district.toString();
+            payload.gender =
+              savedDropdownValues && savedDropdownValues.gender
+                ? savedDropdownValues?.gender?.toString()
+                : payload?.gender?.toString();
+            payload.body_type =
+              savedDropdownValues && savedDropdownValues.body_type
+                ? savedDropdownValues.body_type
+                : payload?.body_type?.toString();
+            payload.caste =
+              savedDropdownValues && savedDropdownValues.caste
+                ? savedDropdownValues.caste
+                : payload?.caste?.toString();
+            payload.citizen =
+              savedDropdownValues && savedDropdownValues.citizen
+                ? savedDropdownValues?.citizen?.toString()
+                : payload?.citizen?.toString();
+            payload.country =
+              savedDropdownValues && savedDropdownValues.country
+                ? savedDropdownValues?.country?.toString()
+                : payload?.country?.toString();
+            payload.drinking_habit =
+              savedDropdownValues && savedDropdownValues.drinking_habit
+                ? savedDropdownValues?.drinking_habit?.toString()
+                : payload?.drinking_habit?.toString();
+            payload.eating_habit =
+              savedDropdownValues && savedDropdownValues.eating_habit
+                ? savedDropdownValues?.eating_habit?.toString()
+                : payload?.eating_habit?.toString();
+            payload.education =
+              savedDropdownValues && savedDropdownValues.education
+                ? savedDropdownValues?.education?.toString()
+                : payload?.education?.toString();
+            payload.family_status =
+              savedDropdownValues && savedDropdownValues.family_status
+                ? savedDropdownValues?.family_status?.toString()
+                : payload?.family_status?.toString();
+            payload.family_type =
+              savedDropdownValues && savedDropdownValues.family_type
+                ? savedDropdownValues?.family_type?.toString()
+                : payload?.family_type?.toString();
+            payload.marital_status =
+              savedDropdownValues && savedDropdownValues.marital_status
+                ? savedDropdownValues?.marital_status?.toString()
+                : payload?.marital_status?.toString();
+            payload.mother_tongue =
+              savedDropdownValues && savedDropdownValues.mother_tongue
+                ? savedDropdownValues?.mother_tongue?.toString()
+                : payload?.mother_tongue?.toString();
+            payload.occupation =
+              savedDropdownValues && savedDropdownValues.occupation
+                ? savedDropdownValues?.occupation?.toString()
+                : payload?.occupation?.toString();
+            payload.physical_status =
+              savedDropdownValues && savedDropdownValues.physical_status
+                ? savedDropdownValues?.physical_status?.toString()
+                : payload?.physical_status?.toString();
+            payload.profession = payload?.profession?.toString();
+            payload.profile_creater = payload?.profile_creater?.toString();
+            payload.religion =
+              savedDropdownValues && savedDropdownValues.religion
+                ? savedDropdownValues?.religion?.toString()
+                : payload?.religion?.toString();
+            payload.salary =
+              savedDropdownValues && savedDropdownValues.salary
+                ? savedDropdownValues?.salary?.toString()
+                : payload?.salary?.toString();
+            payload.smoking_habit =
+              savedDropdownValues && savedDropdownValues.smoking_habit
+                ? savedDropdownValues?.smoking_habit?.toString()
+                : payload?.smoking_habit?.toString();
+            payload.star =
+              savedDropdownValues && savedDropdownValues.star
+                ? savedDropdownValues?.star?.toString()
+                : payload?.star?.toString();
+            payload.zodiac = payload?.zodiac?.toString();
+            payload.state =
+              savedDropdownValues && savedDropdownValues.state
+                ? savedDropdownValues?.state?.toString()
+                : payload?.state?.toString();
+            payload.district =
+              savedDropdownValues && savedDropdownValues.district
+                ? savedDropdownValues?.district?.toString()
+                : payload?.district?.toString();
 
             delete payload.id;
             delete payload.created_by;
@@ -252,7 +314,7 @@ const Profile = () => {
             updateProfileData(payload).then(
               res => {
                 if (res) {
-                  console.log(res.code)
+                  console.log(res.code);
                   ToastMessage('success', 'Profile Updated Successfully.');
                   getProfileData();
                 }
@@ -262,17 +324,22 @@ const Profile = () => {
                 console.log(err);
               },
             );
-          }}>
+          }}
+        >
           {({
             values,
             errors,
             touched,
             handleSubmit,
             handleBlur,
-            handleChange
+            handleChange,
           }) => (
             <>
-              <ScrollView style={{ height: Platform.OS == 'ios' ? height - 220 : height - 180 }}>
+              <ScrollView
+                style={{
+                  height: Platform.OS == 'ios' ? height - 220 : height - 180,
+                }}
+              >
                 <TextInput
                   value={values.name}
                   style={styles.Input}
@@ -294,7 +361,6 @@ const Profile = () => {
                   mode="outlined"
                 />
 
-
                 {renderDropdown('GENDER', 'gender', values, 'Gender')}
 
                 <TextInput
@@ -309,10 +375,15 @@ const Profile = () => {
                 />
 
                 {renderDropdown('BODY_TYPES', 'body_type', values, 'Body Type')}
-                {renderDropdown('PHYSICAL_STATUS', 'physical_status', values, 'Physical Status')}
+                {renderDropdown(
+                  'PHYSICAL_STATUS',
+                  'physical_status',
+                  values,
+                  'Physical Status',
+                )}
 
                 <TextInput
-                  value={values.height.toString()}
+                  value={values?.height?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -322,7 +393,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.weight.toString()}
+                  value={values?.weight?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -332,11 +403,31 @@ const Profile = () => {
                   mode="outlined"
                 />
 
-                {renderDropdown('MARITAL_STATUS', 'marital_status', values, 'Marital Status')}
-                {renderDropdown('MOTHER_TOUNGE_LIST', 'mother_tongue', values, 'Mother Toungue')}
-                {renderDropdown('SMOKING', 'smoking_habit', values, 'Smoking Habit')}
+                {renderDropdown(
+                  'MARITAL_STATUS',
+                  'marital_status',
+                  values,
+                  'Marital Status',
+                )}
+                {renderDropdown(
+                  'MOTHER_TOUNGE_LIST',
+                  'mother_tongue',
+                  values,
+                  'Mother Toungue',
+                )}
+                {renderDropdown(
+                  'SMOKING',
+                  'smoking_habit',
+                  values,
+                  'Smoking Habit',
+                )}
                 {renderDropdown('FOOD', 'eating_habit', values, 'Eating Habit')}
-                {renderDropdown('DRINKING', 'drinking_habit', values, 'Drinking Habit')}
+                {renderDropdown(
+                  'DRINKING',
+                  'drinking_habit',
+                  values,
+                  'Drinking Habit',
+                )}
 
                 {renderDropdown('RELIGION', 'religion', values, 'Religion')}
                 {renderDropdown('CASTE', 'caste', values, 'Caste')}
@@ -369,7 +460,12 @@ const Profile = () => {
                   mode="outlined"
                 />
 
-                {renderDropdown('EDUCATION', 'education', values, 'Higher Qualification')}
+                {renderDropdown(
+                  'EDUCATION',
+                  'education',
+                  values,
+                  'Higher Qualification',
+                )}
 
                 <TextInput
                   value={values.employeed_in}
@@ -382,12 +478,26 @@ const Profile = () => {
                   mode="outlined"
                 />
 
-                {renderDropdown('OCCUPATION', 'occupation', values, 'Occupation')}
+                {renderDropdown(
+                  'OCCUPATION',
+                  'occupation',
+                  values,
+                  'Occupation',
+                )}
                 {renderDropdown('SALARY', 'salary', values, 'Annual Income')}
 
-                {renderDropdown('FAMILY_TYPE', 'family_type', values, 'Family Type')}
-                {renderDropdown('FAMILY_STATUS', 'family_status', values, 'Family Status')}
-
+                {renderDropdown(
+                  'FAMILY_TYPE',
+                  'family_type',
+                  values,
+                  'Family Type',
+                )}
+                {renderDropdown(
+                  'FAMILY_STATUS',
+                  'family_status',
+                  values,
+                  'Family Status',
+                )}
 
                 <TextInput
                   value={values.fathers_occupation}
@@ -410,7 +520,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_brothers.toString()}
+                  value={values?.no_of_brothers?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -420,7 +530,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_brothers_married.toString()}
+                  value={values?.no_of_brothers_married?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -430,7 +540,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_sisters.toString()}
+                  value={values?.no_of_sisters?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -440,7 +550,7 @@ const Profile = () => {
                   mode="outlined"
                 />
                 <TextInput
-                  value={values.no_of_sisters_married.toString()}
+                  value={values?.no_of_sisters_married?.toString()}
                   style={styles.Input}
                   autoCapitalize="none"
                   // autoCorrect="none"
@@ -485,7 +595,8 @@ const Profile = () => {
                 <Button
                   style={styles.Submit}
                   mode="contained"
-                  onPress={handleSubmit}>
+                  onPress={handleSubmit}
+                >
                   Update
                 </Button>
               </View>

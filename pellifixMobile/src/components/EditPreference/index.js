@@ -43,14 +43,14 @@ const EditPreference = () => {
   const [age, setAge] = useState([18, 60]);
   const [height, setHeight] = useState([40, 80]);
   let districts = {};
-  
+
   useEffect(() => {
     DISTRICT.forEach(
       item =>
-      (districts[item.state] = item.districts.map(item => ({
-        key: item,
-        value: item,
-      }))),
+        (districts[item.state] = item.districts.map(item => ({
+          key: item,
+          value: item,
+        }))),
     );
     fetchEditPreference();
   }, []);
@@ -58,7 +58,7 @@ const EditPreference = () => {
   const fetchEditPreference = async () => {
     const response = await getEditPreference().catch(console.log);
     if (response) {
-      console.log(response, "res");
+      console.log(response, 'res');
     }
   };
 
@@ -295,15 +295,16 @@ const EditPreference = () => {
                   async res => {
                     console.log(res, 'res');
                     if (res.data) {
-                      ToastMessage('success','Profile Updated Successfully!')
+                      ToastMessage('success', 'Profile Updated Successfully!');
                     }
                   },
                   err => {
                     console.log(err, 'err');
-                    ToastMessage('error','Try Again!')
+                    ToastMessage('error', 'Try Again!');
                   },
                 );
-              }}>
+              }}
+            >
               {({
                 values,
                 errors,
@@ -475,31 +476,31 @@ const EditPreference = () => {
                         )}
                       </>
                     )}
-                    renderSectionHeader={({ section: { title } }) => (
-                      title ?
+                    renderSectionHeader={({ section: { title } }) =>
+                      title ? (
                         <View
                           style={{
                             width: '100%',
                             height: 50,
                             backgroundColor: 'white',
                             justifyContent: 'center',
-                          }}>
+                          }}
+                        >
                           <Text style={styles.header}>{title}</Text>
                         </View>
-                        : null
-                    )}
+                      ) : null
+                    }
                   />
                   <View style={styles.footer}>
                     <TouchableOpacity
                       style={styles.button}
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit}
+                    >
                       <Text style={styles.buttonText}>Submit</Text>
                     </TouchableOpacity>
                   </View>
                 </>
-
               )}
-
             </Formik>
           </Card.Content>
         </Card>
@@ -550,7 +551,10 @@ const styles = StyleSheet.create({
   },
   Container: {
     width: '100%',
-    height: Platform.OS == 'ios' ? Dimensions.get('window').height - 80 : Dimensions.get('window').height - 40,
+    height:
+      Platform.OS == 'ios'
+        ? Dimensions.get('window').height - 80
+        : Dimensions.get('window').height - 40,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

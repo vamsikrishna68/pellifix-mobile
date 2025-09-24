@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import MenuList from './MenuList';
 import {
   Appbar,
@@ -29,7 +29,7 @@ const Layout = () => {
   const windowHeight = Dimensions.get('window').height;
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-  
+
   const styles = StyleSheet.create({
     container: {
       height: windowHeight,
@@ -48,26 +48,26 @@ const Layout = () => {
     },
   });
 
-
   const handleLogout = () => {
     navigate('/login');
     AsyncStorage.removeItem('@storage_Key');
-    dispatch(chatActions.logout())
-  }
+    dispatch(chatActions.logout());
+  };
 
   const navigateToHome = () => {
     navigate('/auth/home');
     dispatch(sidebarActions.activeItem(location.state.routeInfo, 0));
+  };
 
-  }
   return (
-    <View>
-      {location.pathname === '/auth/home' ?
+    <View style={{ position: 'absolute' }}>
+      {location.pathname === '/auth/home' ? (
         <Appbar.Header
           dark={true}
           mode="small"
           statusBarHeight={1}
-          style={{ backgroundColor: '#d53833', color: 'white' }}>
+          style={{ backgroundColor: '#d53833', color: 'white' }}
+        >
           <Appbar.Action
             color="white"
             icon="menu"
@@ -75,7 +75,11 @@ const Layout = () => {
               setDrawerOpen(!drawerOpen);
             }}
           />
-          <Appbar.Content color="white" title="Pellifix" titleStyle={{ fontWeight: 'bold' }} />
+          <Appbar.Content
+            color="white"
+            title="Pellifix"
+            titleStyle={{ fontWeight: 'bold' }}
+          />
           <Menu
             visible={visible}
             onDismiss={closeMenu}
@@ -83,59 +87,62 @@ const Layout = () => {
               <Button
                 labelStyle={{ fontSize: 24, color: 'white' }}
                 icon="account-circle"
-                onPress={openMenu}></Button>
-            }>
+                onPress={openMenu}
+              ></Button>
+            }
+          >
             {/* <Menu.Item onPress={() => { }} title="Profile" /> */}
             <Menu.Item
               onPress={() => {
-                closeMenu()
+                closeMenu();
                 navigate('/auth/profile', {
                   state: {
-                    routeInfo: { title: 'Profile' }
-                  }
+                    routeInfo: { title: 'Profile' },
+                  },
                 });
               }}
               title="Profile"
             />
-            <Menu.Item
-              onPress={handleLogout}
-              title="Logout"
-            />
+            <Menu.Item onPress={handleLogout} title="Logout" />
           </Menu>
         </Appbar.Header>
-        :
-        location.pathname !== '/auth/CometChatMessages' ?
-          <View
+      ) : location.pathname !== '/auth/CometChatMessages' ? (
+        <View
+          style={{
+            backgroundColor: '#d53833',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            height: 70,
+            width: '100%',
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity
             style={{
-              backgroundColor: '#d53833',
+              width: '10%',
               justifyContent: 'flex-start',
-              alignItems: 'center',
-              height: 70,
-              width: '100%',
-              flexDirection: 'row',
-            }}>
-            <TouchableOpacity
-              style={{
-                width: '10%',
-                justifyContent: 'flex-start',
-                alignItems: 'start',
-              }}
-              onPress={navigateToHome}>
-              <Icon name="chevron-left" size={35} color="white" />
-            </TouchableOpacity>
-            <Text
-              style={{
-                color: 'white',
-                width: '80%',
-                textAlign: 'center',
-                fontSize: 20,
-                fontWeight: 'bold'
-              }}>
-              {location && location.state && location.state.routeInfo && location.state.routeInfo.title}
-            </Text>
-          </View>
-          : null
-      }
+              alignItems: 'start',
+            }}
+            onPress={navigateToHome}
+          >
+            <Icon name="chevron-left" size={35} color="white" />
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: 'white',
+              width: '80%',
+              textAlign: 'center',
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}
+          >
+            {location &&
+              location.state &&
+              location.state.routeInfo &&
+              location.state.routeInfo.title}
+          </Text>
+        </View>
+      ) : null}
 
       <View style={styles.container}>
         <Drawer
